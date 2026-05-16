@@ -14,6 +14,11 @@ import { formatPrice, getImageUrl } from '@/lib/utils'
 import { ShoppingCart, ChevronRight, Lock, Loader2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
+import { loadStripe } from '@stripe/stripe-js'
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
+
+// Initialise once outside of render to avoid re-creating on every render
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY!)
 
 const schema = z.object({
   name: z.string().min(2),
@@ -46,13 +51,31 @@ const PAYMENT_METHODS = [
   { value: 'bank_transfer', label: 'Bank Transfer', icon: '🏦' },
 ]
 
-export function CheckoutContent() {
+const CARD_ELEMENT_OPTIONS = {
+  style: {
+    base: {
+      fontSize: '15px',
+      color: '#111827',
+      fontFamily: '"Inter", system-ui, sans-serif',
+      '::placeholder': { color: '#9ca3af' },
+    },
+    invalid: { color: '#ef4444' },
+  },
+}
+
+// ─── Inner form (needs to be inside <Elements> to call useStripe/useElements) ─
+
+function CheckoutForm() {
   const router = useRouter()
   const { items, summary: rawSummary, coupon, clearCart } = useCartStore()
   const summary = rawSummary ?? { sub_total: 0, subtotal: 0, item_count: 0, discount: 0, tax: 0, shipping: 0, total: 0 }
   const { isAuthenticated, customer } = useAuthStore()
   const [placing, setPlacing] = useState(false)
   const [appliedCoupon, setAppliedCoupon] = useState(coupon)
+  const [cardReady, setCardReady] = useState(false)
+
+  const stripe = useStripe()
+  const elements = useElements()
 
   const {
     register,
@@ -93,8 +116,8 @@ export function CheckoutContent() {
   const shippingOptions = ratesData
     ? ratesData.map((r) => ({
         value: r.method,
-        label: r.label.replace(/\s*\(.*?\)\s*$/, ''), // strip "(X days)" part for label
-        desc: r.label.match(/\(([^)]+)\)/)?.[1] ?? '',  // extract days hint
+        label: r.label.replace(/\s*\(.*?\)\s*$/, ''),
+        desc: r.label.match(/\(([^)]+)\)/)?.[1] ?? '',
         cost: r.cost,
       }))
     : FALLBACK_SHIPPING_OPTIONS
@@ -104,17 +127,6 @@ export function CheckoutContent() {
   const discount = appliedCoupon?.discount ?? 0
   const total = summary.sub_total + shippingCost - discount
 
-  if (items.length === 0) {
-    return (
-      <div className="container-narrow py-24 flex flex-col items-center gap-4 text-center">
-        <ShoppingCart className="w-16 h-16 text-gray-200" />
-        <h2 className="font-display text-2xl font-semibold text-gray-900">Your cart is empty</h2>
-        <p className="text-gray-500">Add items before proceeding to checkout.</p>
-        <Link href="/shop" className="btn-primary">Continue Shopping</Link>
-      </div>
-    )
-  }
-
   const onSubmit = async (data: CheckoutFormData) => {
     if (!isAuthenticated) {
       toast.error('Please log in to place an order.')
@@ -123,6 +135,52 @@ export function CheckoutContent() {
     }
     setPlacing(true)
     try {
+      let paymentIntentId: string | undefined
+
+      // ── Stripe card payment ──────────────────────────────────────────────
+      if (data.payment_method === 'stripe') {
+        if (!stripe || !elements) {
+          toast.error('Stripe has not loaded yet. Please try again.')
+          setPlacing(false)
+          return
+        }
+
+        const cardElement = elements.getElement(CardElement)
+        if (!cardElement) {
+          toast.error('Please enter your card details.')
+          setPlacing(false)
+          return
+        }
+
+        // 1. Create a PaymentIntent on the backend (backend expects dollars, not cents)
+        const intentRes = await checkoutApi.getPaymentIntent({
+          amount: total,
+          currency: 'usd',
+        })
+        const clientSecret: string = (intentRes.data as any).client_secret
+
+        // 2. Confirm the payment with the CardElement
+        const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: cardElement,
+            billing_details: {
+              name: data.name,
+              email: data.email,
+              phone: data.phone,
+            },
+          },
+        })
+
+        if (error) {
+          toast.error(error.message ?? 'Payment failed. Please try again.')
+          setPlacing(false)
+          return
+        }
+
+        paymentIntentId = paymentIntent?.id
+      }
+      // ────────────────────────────────────────────────────────────────────
+
       const payload = {
         shipping_address: {
           name: data.name,
@@ -138,7 +196,9 @@ export function CheckoutContent() {
         payment_method: data.payment_method,
         coupon_code: data.coupon_code || appliedCoupon?.code,
         note: data.note,
+        ...(paymentIntentId ? { payment_intent_id: paymentIntentId } : {}),
       }
+
       const { data: result } = await checkoutApi.placeOrder(payload)
       await clearCart()
       toast.success('Order placed successfully!')
@@ -148,6 +208,17 @@ export function CheckoutContent() {
     } finally {
       setPlacing(false)
     }
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="container-narrow py-24 flex flex-col items-center gap-4 text-center">
+        <ShoppingCart className="w-16 h-16 text-gray-200" />
+        <h2 className="font-display text-2xl font-semibold text-gray-900">Your cart is empty</h2>
+        <p className="text-gray-500">Add items before proceeding to checkout.</p>
+        <Link href="/shop" className="btn-primary">Continue Shopping</Link>
+      </div>
+    )
   }
 
   return (
@@ -249,9 +320,48 @@ export function CheckoutContent() {
                   </label>
                 ))}
               </div>
+
+              {/* ── Stripe CardElement ── */}
               {paymentMethod === 'stripe' && (
-                <div className="mt-4 p-4 rounded-xl bg-gray-50 text-sm text-gray-500 flex items-center gap-2">
-                  <Lock className="w-4 h-4" /> You will enter card details on the next step.
+                <div className="mt-4 rounded-xl border-2 border-gray-200 overflow-hidden">
+                  <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center gap-2 text-xs text-gray-500">
+                    <Lock className="w-3.5 h-3.5" />
+                    <span>Secured by Stripe · Your card details are never stored on our servers</span>
+                  </div>
+                  <div className="p-4">
+                    <CardElement
+                      options={CARD_ELEMENT_OPTIONS}
+                      onChange={(e) => setCardReady(e.complete)}
+                    />
+                  </div>
+                  <div className="px-4 pb-3 flex gap-2 items-center">
+                    {/* Card brand logos via Stripe's hosted assets */}
+                    {['visa', 'mastercard', 'amex', 'discover'].map((brand) => (
+                      <img
+                        key={brand}
+                        src={`https://js.stripe.com/v3/fingerprinted/img/${brand}-${brand === 'visa' ? '729c05e715' : brand === 'mastercard' ? 'f5c191e3c9' : brand === 'amex' ? '25d77a00e9' : '94125db723'}.svg`}
+                        alt={brand}
+                        className="h-5 opacity-60"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {paymentMethod === 'cod' && (
+                <div className="mt-4 p-4 rounded-xl bg-amber-50 border border-amber-200 text-sm text-amber-700">
+                  Payment will be collected when your order is delivered.
+                </div>
+              )}
+              {paymentMethod === 'bank_transfer' && (
+                <div className="mt-4 p-4 rounded-xl bg-blue-50 border border-blue-200 text-sm text-blue-700">
+                  Bank transfer details will be sent to your email after placing the order.
+                </div>
+              )}
+              {paymentMethod === 'paypal' && (
+                <div className="mt-4 p-4 rounded-xl bg-yellow-50 border border-yellow-200 text-sm text-yellow-700">
+                  You will be redirected to PayPal to complete your payment.
                 </div>
               )}
             </div>
@@ -317,13 +427,13 @@ export function CheckoutContent() {
               {/* Place Order */}
               <button
                 type="submit"
-                disabled={placing}
-                className="btn-primary w-full mt-6 gap-2 py-3"
+                disabled={placing || (paymentMethod === 'stripe' && !cardReady)}
+                className="btn-primary w-full mt-6 gap-2 py-3 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {placing ? (
                   <><Loader2 className="w-4 h-4 animate-spin" /> Processing…</>
                 ) : (
-                  <><Lock className="w-4 h-4" /> Place Order</>
+                  <><Lock className="w-4 h-4" /> Place Order · {formatPrice(total)}</>
                 )}
               </button>
               <p className="text-xs text-center text-gray-400 mt-3">
@@ -335,5 +445,15 @@ export function CheckoutContent() {
         </form>
       </div>
     </div>
+  )
+}
+
+// ─── Public export: wraps form in Stripe Elements provider ───────────────────
+
+export function CheckoutContent() {
+  return (
+    <Elements stripe={stripePromise}>
+      <CheckoutForm />
+    </Elements>
   )
 }
