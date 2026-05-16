@@ -1,0 +1,38 @@
+# ===== Backend (Laravel) =====
+backend/.env
+backend/.env.*
+!backend/.env.example
+backend/vendor/
+backend/storage/logs/*.log
+backend/storage/app/public/*
+!backend/storage/app/public/.gitkeep
+backend/storage/framework/cache/
+backend/storage/framework/sessions/
+backend/storage/framework/views/
+backend/bootstrap/cache/*.php
+backend/node_modules/
+backend/public/hot
+backend/public/storage
+
+# ===== Frontend (Next.js) =====
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.cache/
+frontend/dist/
+
+# ===== General =====
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*.swo
+.idea/
+.vscode/
+*.sqlite-wal
+*.sqlite-shm
+
+backend/database/database.sqlite

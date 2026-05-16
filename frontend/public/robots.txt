@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Don't crawl admin and vendor dashboards
+Disallow: /admin/
+Disallow: /vendor/
+Disallow: /account/
+Disallow: /checkout/
+Disallow: /api/
+
+# Crawl-delay for politeness
+Crawl-delay: 1
+
+Sitemap: https://shofy.com/sitemap.xml
