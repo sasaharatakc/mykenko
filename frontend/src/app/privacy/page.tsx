@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = { title: 'Privacy Policy | Shofy' }
+export const metadata: Metadata = { title: 'Privacy Policy | MYKENKO' }
 
 export default function PrivacyPage() {
   return (
@@ -39,11 +39,11 @@ export default function PrivacyPage() {
         <h2>Your Rights</h2>
         <p>
           You may request a copy of your data, correction of inaccurate information, or deletion of your account
-          by contacting us at privacy@shofy.com.
+          by contacting us at privacy@mykenko.com.
         </p>
 
         <h2>Contact</h2>
-        <p>For privacy concerns, email <a href="mailto:privacy@shofy.com">privacy@shofy.com</a>.</p>
+        <p>For privacy concerns, email <a href="mailto:privacy@mykenko.com">privacy@mykenko.com</a>.</p>
       </div>
     </div>
   )

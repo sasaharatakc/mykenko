@@ -46,7 +46,7 @@ export const useWishlistStore = create<WishlistStore>()(
       },
     }),
     {
-      name: 'shofy-wishlist',
+      name: 'mykenko-wishlist',
       partialize: (state) => ({ ids: state.ids }),
     }
   )

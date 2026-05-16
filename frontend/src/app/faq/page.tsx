@@ -36,7 +36,7 @@ const FAQS = [
   },
   {
     q: 'How do I contact customer support?',
-    a: 'You can reach us via the Contact page, email support@shofy.com, or live chat during business hours (Mon–Fri, 9am–6pm EST).',
+    a: 'You can reach us via the Contact page, email support@mykenko.com, or live chat during business hours (Mon–Fri, 9am–6pm EST).',
   },
 ]
 

@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import SearchContent from './SearchContent'
 
 export const metadata: Metadata = {
-  title: 'Search Results | Shofy',
+  title: 'Search Results | MYKENKO',
 }
 
 export default function SearchPage() {

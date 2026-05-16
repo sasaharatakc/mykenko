@@ -48,7 +48,7 @@ export const useUserAuthStore = create<UserAuthStore>()(
       setVendorAuth: (token, user) => {
         if (typeof window !== 'undefined') {
           localStorage.setItem('user_auth_token', token)
-          document.cookie = 'shofy_auth=1; path=/; max-age=2592000; SameSite=Lax'
+          document.cookie = 'mykenko_auth=1; path=/; max-age=2592000; SameSite=Lax'
         }
         set({ user, token, isAuthenticated: true })
       },
@@ -59,7 +59,7 @@ export const useUserAuthStore = create<UserAuthStore>()(
           const { data } = await userAuthApi.login({ email, password })
           if (typeof window !== 'undefined') {
             localStorage.setItem('user_auth_token', data.token)
-            document.cookie = 'shofy_auth=1; path=/; max-age=2592000; SameSite=Lax'
+            document.cookie = 'mykenko_auth=1; path=/; max-age=2592000; SameSite=Lax'
           }
           set({ user: data.user, token: data.token, isAuthenticated: true })
         } finally {
@@ -77,7 +77,7 @@ export const useUserAuthStore = create<UserAuthStore>()(
             localStorage.removeItem('user_auth_token')
             const customerToken = localStorage.getItem('auth_token')
             if (!customerToken) {
-              document.cookie = 'shofy_auth=; path=/; max-age=0'
+              document.cookie = 'mykenko_auth=; path=/; max-age=0'
             }
           }
           set({ user: null, token: null, isAuthenticated: false })
@@ -96,7 +96,7 @@ export const useUserAuthStore = create<UserAuthStore>()(
           if (error?.response?.status === 401) {
             if (typeof window !== 'undefined') {
               localStorage.removeItem('user_auth_token')
-              document.cookie = 'shofy_auth=; path=/; max-age=0'
+              document.cookie = 'mykenko_auth=; path=/; max-age=0'
             }
             set({ user: null, token: null, isAuthenticated: false })
           }
@@ -104,7 +104,7 @@ export const useUserAuthStore = create<UserAuthStore>()(
       },
     }),
     {
-      name: 'shofy-user-auth',
+      name: 'mykenko-user-auth',
       partialize: (state) => ({
         token: state.token,
         user: state.user,

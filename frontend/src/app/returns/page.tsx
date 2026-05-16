@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { RotateCcw, CheckCircle, XCircle, Clock } from 'lucide-react'
 
-export const metadata: Metadata = { title: 'Return Policy | Shofy' }
+export const metadata: Metadata = { title: 'Return Policy | MYKENKO' }
 
 export default function ReturnsPage() {
   return (

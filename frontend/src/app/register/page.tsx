@@ -52,7 +52,7 @@ export default function RegisterPage() {
       <div className="w-full max-w-md">
         <div className="card p-8">
           <div className="text-center mb-8">
-            <Link href="/" className="font-display text-2xl font-bold text-primary-500">Shofy</Link>
+            <Link href="/" className="font-display text-2xl font-bold text-primary-500">MYKENKO</Link>
             <h1 className="font-display text-xl font-semibold text-gray-900 mt-3">Create Account</h1>
             <p className="text-gray-500 text-sm mt-1">Join thousands of shoppers</p>
           </div>

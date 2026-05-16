@@ -50,7 +50,7 @@ export function BlogListContent({ searchParams }: BlogListContentProps) {
       <div className="bg-white border-b border-gray-100">
         <div className="container-narrow py-10 text-center">
           <h1 className="font-display text-3xl font-bold text-gray-900">Our Blog</h1>
-          <p className="text-gray-500 mt-2">Tips, news and updates from the Shofy team</p>
+          <p className="text-gray-500 mt-2">Tips, news and updates from the MYKENKO team</p>
           <div className="relative max-w-md mx-auto mt-6">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input

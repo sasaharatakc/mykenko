@@ -9,8 +9,8 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const name = params.slug.replace(/-/g, ' ')
   return {
-    title: `${name} | Shofy`,
-    description: `${name} の商品一覧 — Shofy マーケットプレイスで最高の ${name} 商品を探しましょう。`,
+    title: `${name} | MYKENKO`,
+    description: `${name} の商品一覧 — MYKENKO（マイケンコー）マーケットプレイスで最高の ${name} 商品を探しましょう。`,
   }
 }
 

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Truck, Clock, Globe, Package } from 'lucide-react'
 
-export const metadata: Metadata = { title: 'Shipping Policy | Shofy' }
+export const metadata: Metadata = { title: 'Shipping Policy | MYKENKO' }
 
 export default function ShippingPage() {
   return (

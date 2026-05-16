@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Blog - Latest News & Updates',
-  description: 'Read the latest news, updates, and guides from Shofy.',
+  description: 'Read the latest news, updates, and guides from MYKENKO.',
 }
 
 interface Props {

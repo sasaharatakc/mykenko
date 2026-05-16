@@ -9,7 +9,7 @@ export function middleware(request: NextRequest) {
 
   // Auth token is stored in localStorage (client-side only).
   // We use a cookie set by the client as a hint for server-side redirect.
-  const authCookie = request.cookies.get('shofy_auth')?.value
+  const authCookie = request.cookies.get('mykenko_auth')?.value
 
   const isProtected = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p))
   const isAuthRoute = AUTH_ROUTES.some((p) => pathname.startsWith(p))

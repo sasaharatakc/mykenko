@@ -48,8 +48,8 @@ export default function ContactPage() {
     {
       Icon: Mail,
       label: 'Email',
-      value: 'support@shofy.com',
-      href: 'mailto:support@shofy.com',
+      value: 'support@mykenko.com',
+      href: 'mailto:support@mykenko.com',
     },
     {
       Icon: Clock,

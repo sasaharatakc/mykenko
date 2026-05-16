@@ -23,7 +23,7 @@ type StoreForm = z.infer<typeof storeSchema>
 
 const BENEFITS = [
   { Icon: Package, title: 'Easy Product Management', desc: 'Upload and manage your products with our intuitive dashboard.' },
-  { Icon: TrendingUp, title: 'Grow Your Sales', desc: 'Reach thousands of buyers actively shopping on Shofy.' },
+  { Icon: TrendingUp, title: 'Grow Your Sales', desc: 'Reach thousands of buyers actively shopping on MYKENKO.' },
   { Icon: Shield, title: 'Secure Payments', desc: 'Get paid reliably with automatic payouts to your account.' },
   { Icon: Headphones, title: '24/7 Vendor Support', desc: 'Our dedicated team is here to help you succeed.' },
 ]
@@ -53,7 +53,7 @@ export default function BecomeVendorPage() {
         setVendorAuth(res.data.token, res.data.user)
       }
       setSuccess(true)
-      toast.success('Store created! Welcome to Shofy marketplace.')
+      toast.success('Store created! Welcome to MYKENKO marketplace.')
     } catch (err: any) {
       const msg = err?.response?.data?.message ?? 'Failed to create store'
       toast.error(msg)
@@ -68,7 +68,7 @@ export default function BecomeVendorPage() {
       <div className="bg-gradient-to-br from-primary-600 to-primary-800 text-white">
         <div className="container-narrow py-16 text-center">
           <Store className="w-12 h-12 mx-auto mb-4 opacity-90" />
-          <h1 className="font-display text-4xl font-bold">Start Selling on Shofy</h1>
+          <h1 className="font-display text-4xl font-bold">Start Selling on MYKENKO</h1>
           <p className="text-primary-100 mt-3 text-lg max-w-xl mx-auto">
             Join thousands of vendors and reach millions of shoppers. Set up your store in minutes.
           </p>

@@ -14,25 +14,25 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: { default: 'Shofy — マルチベンダーマーケットプレイス', template: '%s | Shofy' },
-  description: '国内最大級のマルチベンダー EC。数千の認定ベンダーから最高の商品をお得に購入できます。',
-  keywords: ['EC', 'ショッピング', 'マーケットプレイス', 'オンラインショップ', '通販', 'ecommerce'],
-  authors: [{ name: 'Shofy' }],
-  creator: 'Shofy',
+  title: { default: 'MYKENKO — 医薬品個人輸入マーケットプレイス', template: '%s | MYKENKO' },
+  description: 'MYKENKOは日本最大級の医薬品個人輸入マーケットプレイスです。ED治療薬・AGA・美容・ダイエットなど幅広い医薬品を安全に購入できます。',
+  keywords: ['EC', 'ショッピング', 'マーケットプレイス', 'オンラインショップ', '通販', 'ecommerce', '医薬品', '個人輸入'],
+  authors: [{ name: 'MYKENKO' }],
+  creator: 'MYKENKO',
   manifest: '/manifest.json',
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
   openGraph: {
     type: 'website',
     locale: 'ja_JP',
-    siteName: 'Shofy マーケットプレイス',
-    title: 'Shofy — マルチベンダーマーケットプレイス',
-    description: '国内最大級のマルチベンダー EC。数千の認定ベンダーから最高の商品をお得に購入できます。',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Shofy Marketplace' }],
+    siteName: 'MYKENKO マーケットプレイス',
+    title: 'MYKENKO — 医薬品個人輸入マーケットプレイス',
+    description: 'MYKENKOは日本最大級の医薬品個人輸入マーケットプレイスです。ED治療薬・AGA・美容・ダイエットなど幅広い医薬品を安全に購入できます。',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'MYKENKO Marketplace' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Shofy — マルチベンダーマーケットプレイス',
-    description: '国内最大級のマルチベンダー EC。',
+    title: 'MYKENKO — 医薬品個人輸入マーケットプレイス',
+    description: 'MYKENKOは日本最大級の医薬品個人輸入マーケットプレイスです。',
     images: ['/og-image.png'],
   },
   robots: {
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable}`} suppressHydrationWarning>
+    <html lang="ja" className={`${inter.variable} ${poppins.variable}`} suppressHydrationWarning>
       <body className="font-sans bg-white text-gray-900 antialiased">
         <Providers>
           <ConditionalShell>{children}</ConditionalShell>

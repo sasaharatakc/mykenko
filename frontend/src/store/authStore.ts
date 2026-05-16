@@ -29,7 +29,7 @@ export const useAuthStore = create<AuthStore>()(
           const { data } = await authApi.login({ email, password })
           if (typeof window !== 'undefined') {
             localStorage.setItem('auth_token', data.token)
-            document.cookie = 'shofy_auth=1; path=/; max-age=2592000; SameSite=Lax'
+            document.cookie = 'mykenko_auth=1; path=/; max-age=2592000; SameSite=Lax'
           }
           set({ customer: data.customer, token: data.token, isAuthenticated: true })
         } finally {
@@ -43,7 +43,7 @@ export const useAuthStore = create<AuthStore>()(
           const { data } = await authApi.register(formData)
           if (typeof window !== 'undefined') {
             localStorage.setItem('auth_token', data.token)
-            document.cookie = 'shofy_auth=1; path=/; max-age=2592000; SameSite=Lax'
+            document.cookie = 'mykenko_auth=1; path=/; max-age=2592000; SameSite=Lax'
           }
           set({ customer: data.customer, token: data.token, isAuthenticated: true })
         } finally {
@@ -62,7 +62,7 @@ export const useAuthStore = create<AuthStore>()(
             // Only clear the shared auth cookie if the vendor session is also gone
             const userToken = localStorage.getItem('user_auth_token')
             if (!userToken) {
-              document.cookie = 'shofy_auth=; path=/; max-age=0'
+              document.cookie = 'mykenko_auth=; path=/; max-age=0'
             }
           }
           set({ customer: null, token: null, isAuthenticated: false })
@@ -83,7 +83,7 @@ export const useAuthStore = create<AuthStore>()(
               localStorage.removeItem('auth_token')
               const userToken = localStorage.getItem('user_auth_token')
               if (!userToken) {
-                document.cookie = 'shofy_auth=; path=/; max-age=0'
+                document.cookie = 'mykenko_auth=; path=/; max-age=0'
               }
             }
             set({ customer: null, token: null, isAuthenticated: false })
@@ -94,7 +94,7 @@ export const useAuthStore = create<AuthStore>()(
       setCustomer: (customer) => set({ customer }),
     }),
     {
-      name: 'shofy-auth',
+      name: 'mykenko-auth',
       partialize: (state) => ({ token: state.token, customer: state.customer, isAuthenticated: state.isAuthenticated }),
       onRehydrateStorage: () => (state) => {
         // Sync auth_token so the axios interceptor can read it

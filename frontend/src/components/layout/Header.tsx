@@ -58,7 +58,7 @@ export function Header() {
           <div className="flex items-center justify-between h-16 gap-4">
             {/* Logo */}
             <Link href="/" className="flex-shrink-0">
-              <span className="font-display text-2xl font-bold text-primary-500">Shofy</span>
+              <span className="font-display text-2xl font-bold text-primary-500">MYKENKO</span>
             </Link>
 
             {/* Nav – desktop */}
@@ -83,6 +83,15 @@ export function Header() {
               </div>
               <Link href="/stores" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-500 rounded-lg transition-colors">
                 Vendors
+              </Link>
+              <Link href="/guides" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-500 rounded-lg transition-colors">
+                ガイド
+              </Link>
+              <Link href="/ranking" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-500 rounded-lg transition-colors">
+                ランキング
+              </Link>
+              <Link href="/compare" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-500 rounded-lg transition-colors">
+                比較
               </Link>
               <Link href="/blog" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-500 rounded-lg transition-colors">
                 Blog
@@ -156,6 +165,9 @@ export function Header() {
               {[
                 { href: '/', label: 'Home' },
                 { href: '/shop', label: 'Shop' },
+                { href: '/guides', label: 'ガイド' },
+                { href: '/ranking', label: 'ランキング' },
+                { href: '/compare', label: '比較' },
                 { href: '/stores', label: 'Vendors' },
                 { href: '/blog', label: 'Blog' },
                 { href: '/contact', label: 'Contact' },

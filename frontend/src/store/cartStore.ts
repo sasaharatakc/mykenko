@@ -11,7 +11,7 @@ import toast from 'react-hot-toast'
  */
 function getGuestSessionId(): string {
   if (typeof window === 'undefined') return ''
-  const KEY = 'shofy_guest_session'
+  const KEY = 'mykenko_guest_session'
   let id = localStorage.getItem(KEY)
   if (!id) {
     id = 'guest-' + Math.random().toString(36).slice(2) + Date.now().toString(36)
@@ -115,7 +115,7 @@ export const useCartStore = create<CartStore>()(
       removeCoupon: () => set({ coupon: null }),
     }),
     {
-      name: 'shofy-cart',
+      name: 'mykenko-cart',
       partialize: (state) => ({ coupon: state.coupon }),
     }
   )

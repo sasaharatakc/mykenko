@@ -23,9 +23,9 @@ export function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
-            <span className="font-display text-2xl font-bold text-white">Shofy</span>
+            <span className="font-display text-2xl font-bold text-white">MYKENKO</span>
             <p className="mt-4 text-sm leading-relaxed">
-              The best multivendor marketplace for finding quality products from verified sellers worldwide.
+              日本最大級の医薬品個人輸入マーケットプレイス。世界中の認定ベンダーから安全・安心にお買い物できます。
             </p>
             <div className="flex gap-3 mt-6">
               {[
@@ -102,7 +102,7 @@ export function Footer() {
               </li>
               <li className="flex gap-3 text-sm">
                 <Mail className="w-4 h-4 text-primary-400 flex-shrink-0" />
-                <a href="mailto:support@shofy.com" className="hover:text-primary-400 transition-colors">support@shofy.com</a>
+                <a href="mailto:support@mykenko.com" className="hover:text-primary-400 transition-colors">support@mykenko.com</a>
               </li>
             </ul>
 
@@ -124,7 +124,7 @@ export function Footer() {
       {/* Copyright */}
       <div className="border-t border-gray-800">
         <div className="container-narrow py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500">
-          <p>© {new Date().getFullYear()} Shofy Marketplace. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} MYKENKO マーケットプレイス. All rights reserved.</p>
           <div className="flex gap-4">
             <Link href="/privacy" className="hover:text-gray-300 transition-colors">Privacy</Link>
             <Link href="/terms" className="hover:text-gray-300 transition-colors">Terms</Link>

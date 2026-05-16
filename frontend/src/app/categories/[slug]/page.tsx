@@ -8,7 +8,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
-    title: `${params.slug.replace(/-/g, ' ')} | Shofy`,
+    title: `${params.slug.replace(/-/g, ' ')} | MYKENKO`,
     description: `Browse products in ${params.slug.replace(/-/g, ' ')}.`,
   }
 }

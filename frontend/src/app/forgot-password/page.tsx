@@ -30,7 +30,7 @@ export default function ForgotPasswordPage() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <Link href="/" className="font-display text-2xl font-bold text-primary-500">Shofy</Link>
+          <Link href="/" className="font-display text-2xl font-bold text-primary-500">MYKENKO</Link>
         </div>
 
         <div className="card p-8">

@@ -169,11 +169,11 @@ function LoginForm() {
                 <Shield className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
                 <div className="text-xs text-amber-700 space-y-1">
                   <p className="font-semibold">テスト用管理者アカウント</p>
-                  <p>メール: <code className="font-mono bg-amber-100 px-1 rounded">admin@shofy.com</code></p>
+                  <p>メール: <code className="font-mono bg-amber-100 px-1 rounded">admin@mykenko.com</code></p>
                   <p>パスワード: <code className="font-mono bg-amber-100 px-1 rounded">admin123</code></p>
                   <button
                     type="button"
-                    onClick={() => fillDemo('admin@shofy.com', 'admin123')}
+                    onClick={() => fillDemo('admin@mykenko.com', 'admin123')}
                     className="text-amber-800 font-medium underline underline-offset-2 hover:no-underline"
                   >
                     → 自動入力する

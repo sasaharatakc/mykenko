@@ -11,8 +11,8 @@ import { FeatureBanner } from '@/components/home/FeatureBanner'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Shofy - Best Online Marketplace',
-  description: 'Shop millions of products from verified vendors. Best prices, fast delivery.',
+  title: 'MYKENKO - 医薬品個人輸入マーケットプレイス',
+  description: 'MYKENKOは日本最大級の医薬品個人輸入マーケットプレイスです。安全・安心にご購入いただけます。',
 }
 
 export default function HomePage() {

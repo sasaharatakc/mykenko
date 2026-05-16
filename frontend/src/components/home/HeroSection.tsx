@@ -84,7 +84,7 @@ export function HeroSection() {
             </div>
             <div className="bg-gradient-to-br from-purple-50 to-violet-50 rounded-2xl p-6 flex-1">
               <span className="badge bg-white text-purple-600 text-xs font-semibold">Vendor Program</span>
-              <h3 className="font-display text-xl font-semibold text-gray-900 mt-3 mb-1">Sell on Shofy</h3>
+              <h3 className="font-display text-xl font-semibold text-gray-900 mt-3 mb-1">Sell on MYKENKO</h3>
               <p className="text-sm text-gray-500 mb-4">Reach millions of customers. Start for free.</p>
               <Link href="/become-vendor" className="flex items-center gap-1 text-primary-500 text-sm font-medium hover:gap-2 transition-all">
                 Get Started <ChevronRight className="w-4 h-4" />
