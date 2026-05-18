@@ -346,4 +346,40 @@ export const vendorApi = {
 
   store: () => apiClient.get('/vendor/store'),
   updateStore: (data: object) => apiClient.put('/vendor/store', data),
+
+  // Finance
+  earnings: (params?: object) => apiClient.get('/vendor/finance/earnings', { params }),
+  financeSettings: () => apiClient.get('/vendor/finance/settings'),
+  updateFinanceSettings: (data: object) => apiClient.put('/vendor/finance/settings', data),
+
+  // Inventory
+  inventory: (params?: object) => apiClient.get('/vendor/inventory', { params }),
+  updateStock: (productId: number, stock: number) => apiClient.put(`/vendor/products/${productId}/stock`, { stock }),
+
+  // Shipments
+  shipments: (params?: object) => apiClient.get('/vendor/shipments', { params }),
+
+  // Returns
+  returns: (params?: object) => apiClient.get('/vendor/returns', { params }),
+  updateReturn: (id: number, data: object) => apiClient.put(`/vendor/returns/${id}`, data),
+
+  // Cancellations
+  cancellations: (params?: object) => apiClient.get('/vendor/cancellations', { params }),
+
+  // Marketing
+  coupons: (params?: object) => apiClient.get('/vendor/coupons', { params }),
+  createCoupon: (data: object) => apiClient.post('/vendor/coupons', data),
+  updateCoupon: (id: number, data: object) => apiClient.put(`/vendor/coupons/${id}`, data),
+  deleteCoupon: (id: number) => apiClient.delete(`/vendor/coupons/${id}`),
+
+  // Reviews
+  reviews: (params?: object) => apiClient.get('/vendor/reviews', { params }),
+  replyReview: (id: number, reply: string) => apiClient.post(`/vendor/reviews/${id}/reply`, { reply }),
+
+  // Import/Export
+  importProducts: (formData: FormData) => apiClient.post('/vendor/products/import', formData),
+  exportProducts: (params?: object) => apiClient.get('/vendor/products/export', { params, responseType: 'blob' }),
+
+  // Variants
+  variants: (params?: object) => apiClient.get('/vendor/variants', { params }),
 }

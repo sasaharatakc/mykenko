@@ -20,6 +20,7 @@ import {
   UserCog, Shield, KeyRound, Plug, Languages, ScrollText, HardDrive, Database, Clock, Lock,
   Settings, LogOut, ChevronRight, ChevronDown,
   Image as ImageIcon,
+  Upload, Download,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -51,6 +52,8 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/admin/variants',       label: 'バリアント',     Icon: GitBranch },
       { href: '/admin/inventory',      label: '在庫管理',       Icon: Boxes },
       { href: '/admin/spec-tables',    label: 'スペックテーブル', Icon: Table2 },
+      { href: '/admin/products/import', label: 'インポート',     Icon: Upload },
+      { href: '/admin/products/export', label: 'エクスポート',   Icon: Download },
       { href: '/admin/reviews',        label: 'レビュー',       Icon: Star },
 
       { type: 'subheader', label: '注文管理' },
