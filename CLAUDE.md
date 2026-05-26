@@ -1,137 +1,87 @@
-# Shofy Rewrite — Claude Code 作業メモ
+# AI Organization OS — MYKENKO プロジェクトルール
 
-## プロジェクト構成
+## 動作モデル
+Kingmaker → Gamechanger → @router → Crew選定 → Agent実行 → Skill活用 → ツール/MCP/API → Review Mesh → Approval Gate → Memory Layer → Evolution Layer
 
-- **frontend/** — Next.js 14 (App Router)
-- **backend/** — Laravel 11 + Sanctum
+## 常に守るルール
+- ユーザー向けの計画・説明は日本語を使用（コード・英語固有名詞を除く）
+- 実装依頼はチャット説明より実際のファイル変更を優先
+- 独立した調査・監査・並列レビューはサブエージェントを使用
+- 繰り返しワークフローはスキルを使用
+- 明示的な承認なしに本番データの公開・送信・削除・取引・変更を行わない
+- 医療/YMYL/医薬品コンテンツは効果の断言を避け、コンプライアンスレビューを実行
+- SEO/GEO/SNS/PRは戦略・実行・レビュー・メモリ書き戻しを分離
 
-### ローカル起動コマンド
+## デフォルトビルドコマンド
+- JavaScript/Next.js: `npm run lint`, `npm test`, `npm run build`
+- PHP/Laravel: `php artisan test`, `php artisan route:list`
+- Python: `pytest`, `ruff check`, `mypy`
+- Git: 最終サマリー前に `git status` と `git diff` を確認
 
-```bash
-# バックエンド
-cd backend && php artisan serve --port=8000
+## 出力標準
+完了したタスクには必ず含める：変更ファイル、検証結果、リスク、次のアクション
 
-# フロントエンド
-cd frontend && npm run dev
-```
+## Crew構成（153エージェント）
+| Crew | 目的 | 主要Agent |
+|------|------|---------|
+| Research Crew | 調査・情報収集 | google-search-agent, competitor-agent, market-research-agent, reddit-agent, news-agent, trend-agent, academic-paper-agent, patent-agent |
+| Data Crew | データ収集・処理 | crawler-agent, firecrawl-agent, scraping-agent, parser-agent, normalizer-agent, qdrant-agent, neo4j-agent, data-quality-agent |
+| Analysis Crew | 分析・インサイト | seo-analyst, market-analyst, business-analyst, financial-analyst, trend-analyst, competitor-analyst, review-analyst, pricing-analyst, product-analyst |
+| Strategy Crew | 戦略立案 | kingmaker, gamechanger, ceo-agent, cmo-agent, coo-agent, cfo-agent, growth-agent, brand-agent, expansion-agent, product-strategy-agent, chief-of-staff |
+| Development Crew | 開発・実装 | system-architect, nextjs-engineer, laravel-engineer, python-engineer, typescript-engineer, mobile-engineer, ai-engineer, devops-engineer, database-engineer, security-engineer, qa-engineer, tdd-guide |
+| Design Crew | デザイン | creative-director, art-director, ui-designer, ux-designer, lp-designer, banner-designer, video-designer, motion-designer, brand-designer, figma-designer |
+| SEO Crew | 検索流入獲得 | technical-seo, onpage-seo, offpage-seo, entity-seo, programmatic-seo-agent, internal-link-seo, schema-seo, local-seo, ai-overview-seo, parasite-seo |
+| GEO Crew | AI検索最適化 | geo-writer, citation-builder, mention-builder, entity-builder, authority-builder, knowledge-graph-agent, ai-search-monitor |
+| Marketing Crew | 集客 | meta-ads-agent, google-ads-agent, yahoo-ads-agent, tiktok-ads-agent, x-ads-agent, affiliate-agent, email-marketing-agent, crm-agent, influencer-agent, community-agent |
+| Sales Crew | 販売・転換 | sales-planner, offer-agent, upsell-agent, cross-sell-agent, retention-agent, ltv-agent, conversion-agent |
+| Content Crew | コンテンツ制作 | copywriter, seo-writer, medical-writer, pr-writer, script-writer, video-writer, sns-writer, email-writer, translator, editor |
+| PR Crew | 認知拡大 | press-release-agent, media-outreach-agent, pr-writer |
+| SNS Crew | SNS運用 | x-agent, instagram-agent, tiktok-agent, threads-agent, youtube-agent, pinterest-agent, linkedin-agent, sns-writer |
+| Review Crew | 品質管理 | fact-checker, compliance-checker, seo-checker, ux-checker, design-checker, risk-checker, medical-checker, code-reviewer |
+| Execution Crew | 実行・自動化 | workflow-agent, task-agent, scheduler-agent, automation-agent, automation-engineer, notification-agent, deployment-agent, publishing-agent, loop-operator |
 
-- フロントエンド: http://localhost:3000
-- バックエンド API: http://localhost:8000
+## スキル一覧（63スキル）
+| カテゴリ | スキル数 | 主要スキル |
+|--------|--------|---------|
+| router | 7 | /route-task, /crew-select, /parallel-run, /workflow-gen, /context-compress, /priority-sort |
+| seo | 14 | /seo-audit, /keyword-research, /content-brief, /technical-check, /ai-overview-optimize, /backlink-strategy |
+| geo-llmo | 3 | /geo-audit, /entity-extract, /citation-build |
+| research | 9 | /google-search, /deep-research-flow, /competitor-analysis, /trend-research, /reddit-mining, /regulation-research |
+| ai | 5 | /prompt-engineering, /rag-workflow, /claude-api-usage, /langgraph-workflow, /n8n-automation |
+| automation | 3 | /playwright-automation, /webhook-setup, /etl-pipeline |
+| code | 10 | /new-feature, /bug-fix, /security-review, /tdd-workflow, /refactor-flow, /deploy-flow, /adr, /api-design, /laravel-patterns, /nextjs-patterns |
+| content | 2 | /article-writing, /video-script |
+| design | 2 | /ux-audit, /design-system |
+| ecommerce | 2 | /checkout-optimize, /vendor-onboard |
+| marketing | 3 | /campaign-launch, /meta-ads-flow, /email-flow |
+| medical | 3 | /yakki-check, /ymyl-check, /evidence-search |
 
-### DB / キャッシュ設定（開発環境）
+## Memory Layer
+- Qdrant: ベクター検索・セマンティック記憶
+- Neo4j: 関係性グラフ・知識ネットワーク
+- Obsidian: 構造化ノート・プロジェクト記録
+- Google Drive: ドキュメント・レポート保管
 
-- DB: SQLite (`backend/database/database.sqlite`)
-- Cache/Queue: `file` ドライバ（MySQL / Redis 未インストール）
+## 接続済みMCPサーバー
 
----
+### 常時利用可能
+| ツール | 用途 |
+|-------|------|
+| `mcp__firecrawl__*` | Webスクレイピング |
+| `mcp__context7__*` | ライブラリドキュメント検索 |
 
-## 認証アーキテクチャ
+### Claude App OAuth接続済み
+| プラグイン | 用途 |
+|-----------|------|
+| Figma (`mcp__a0ee5616__*`) | デザイン操作 |
+| Notion (`mcp__b8c67c59__*`) | ワークスペース管理 |
+| Adobe (`mcp__ca458ec0__*`) | Creative Cloud操作 |
+| Google Drive (`mcp__4e5dfa69__*`) | ファイル操作 |
+| GitHub (`mcp__github__*`) | コード管理 |
 
-### ユーザー種別
-
-| 種別 | モデル | テーブル | localStorage キー | Zustand ストア |
-|------|--------|---------|-------------------|---------------|
-| Customer（購入者） | `App\Models\Customer` | `customers` | `auth_token` | `authStore` → `shofy-auth` |
-| Vendor / Admin（管理者） | `App\Models\User` | `users` | `user_auth_token` | `userAuthStore` → `shofy-user-auth` |
-
-### ミドルウェア（Next.js）
-
-- `shofy_auth` Cookie の有無でサーバーサイドリダイレクト判定
-- Cookie はログイン成功時にクライアントが `document.cookie` で付与
-- 保護パス: `/account`, `/checkout`, `/vendor`, `/admin`
-
-### Axios インターセプター (`frontend/src/lib/api.ts`)
-
-- リクエスト時: `user_auth_token` → `auth_token` の優先順で Bearer トークンを付与
-- 401 受信時: 保護パスにいる場合のみ `/login?redirect=<現在のパス>` へリダイレクト
-
-### Zustand rehydration
-
-`onRehydrateStorage` コールバックで、persist から復元したトークンを
-localStorage の専用キーに書き戻す（axios インターセプターが読めるようにするため）。
-
----
-
-## 解決済み問題
-
-### `/admin` アクセスがトップ (`/`) にリダイレクトされる
-
-**根本原因（3つ）と修正内容**
-
-#### 1. Sanctum が User トークンを 401 で弾く
-
-- **原因**: `backend/config/auth.php` の `sanctum` ガードに `'provider' => 'customers'` が設定されており、Sanctum v4 の `hasValidProvider()` が `User instanceof Customer → false` を返していた
-- **修正**: `'provider' => null` に変更 → どのモデルのトークンも受け付ける
-
-```php
-// backend/config/auth.php
-'sanctum' => [
-    'driver'   => 'sanctum',
-    'provider' => null,  // Customer・User 両モデルのトークンを受け付ける
-],
-```
-
-#### 2. Axios インターセプターが `redirect` パラメータなしで `/login` へ飛ばす
-
-- **原因**: 401 時に `window.location.href = '/login'` と書いていた
-- **修正**: `'/login?redirect=' + encodeURIComponent(window.location.pathname)` に変更
-- **影響**: `redirect` なしで `/login` に来ると、middleware が `shofy_auth` Cookie を見て `/` にリダイレクトするループが発生していた
-
-#### 3. ページリロード時に `user_auth_token` が localStorage に存在しない
-
-- **原因**: `userAuthStore` の `onRehydrateStorage` でトークンを localStorage に書き戻す処理が未実装
-- **修正**: `onRehydrateStorage` で `localStorage.setItem('user_auth_token', state.token)` を追加
-- `authStore` にも同様に `auth_token` を書き戻す処理を追加
-
----
-
-## 開発用アカウント
-
-| 種別 | メール | パスワード |
-|------|--------|-----------|
-| Admin | admin@shofy.com | admin123 |
-
----
-
-## 管理画面ページ一覧
-
-| パス | 内容 | 状態 |
-|------|------|------|
-| `/admin` | ダッシュボード（売上・注文・顧客・商品・ベンダー統計） | ✅ |
-| `/admin/products` | 商品一覧（検索・絞込・一括操作・削除） | ✅ |
-| `/admin/products/new` | 商品新規作成 | ✅ |
-| `/admin/products/[id]/edit` | 商品編集 | ✅ |
-| `/admin/orders` | 注文一覧（ステータス更新） | ✅ |
-| `/admin/orders/[id]` | 注文詳細（ステータス変更・配送追跡） | ✅ |
-| `/admin/customers` | 顧客一覧（停止・削除） | ✅ |
-| `/admin/customers/[id]` | 顧客詳細（注文履歴・住所・統計） | ✅ |
-| `/admin/stores` | ベンダー一覧（認証ボタン） | ✅ |
-| `/admin/stores/[id]` | ベンダー詳細（コミッション編集・認証取消・取引履歴） | ✅ |
-| `/admin/shipments` | 出荷一覧（キャリア・追跡番号・ステータス管理） | ✅ |
-| `/admin/returns` | 返品一覧（ステータスフィルター） | ✅ |
-| `/admin/returns/[id]` | 返品詳細（承認・却下・完了処理・返金額） | ✅ |
-| `/admin/withdrawals` | 出金申請一覧（承認・却下） | ✅ |
-| `/admin/categories` | カテゴリ管理（追加・編集・削除） | ✅ |
-| `/admin/blog` | ブログ一覧 | ✅ |
-| `/admin/blog/new` | ブログ新規作成 | ✅ |
-| `/admin/blog/[id]/edit` | ブログ編集 | ✅ |
-| `/admin/settings` | サイト設定（通貨・コミッション・アクセス制御） | ✅ |
-| `/admin/brands` | ブランド管理（追加・編集・削除・注目フラグ） | ✅ |
-| `/admin/discounts` | 割引コード管理（％・固定・有効期限・使用回数） | ✅ |
-| `/admin/flash-sales` | フラッシュセール管理（商品追加・削除・展開表示） | ✅ |
-| `/admin/reviews` | レビュー管理（承認・却下・削除） | ✅ |
-
----
-
-## 起動方法（preview_start 使用）
-
-`.claude/launch.json` に設定済み。次回からは `preview_start` で起動可能。
-
----
-
-## 既知の事項
-
-- PHP 8.5 の deprecation warning は `backend/public/index.php` で抑制済み
-- Admin ダッシュボード初期表示: 売上 $0.00、注文 0 件、顧客 0 件（DB 空のため）
-- `frontend/.env.local` に `NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1` 設定済み
-- `backend/.env` の `DB_DATABASE` パスを `/Users/user/ECAI/...` に修正済み
+## プロジェクト: MYKENKO
+- フロントエンド: Next.js 14 (App Router) — `frontend/`
+- バックエンド: Laravel 11 + Sanctum — `backend/`
+- DB: SQLite (開発), MySQL (本番)
+- 認証: Customer (`auth_token`) / Vendor+Admin (`user_auth_token`)
+- Cookie: `mykenko_auth=1` で保護ルートのミドルウェア制御
