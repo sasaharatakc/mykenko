@@ -1,122 +1,94 @@
-# Shofy — Ecommerce Multivendor Marketplace
+# MYKENKO
 
-Full rewrite of the Shofy marketplace platform.
+> 日本最大のヘルスケア知識プラットフォーム
 
-**Stack:** Laravel 11 API · Next.js 14 (App Router) · Tailwind CSS · TanStack Query · Zustand
+MYKENKO は **Healthcare Knowledge Graph Platform** です。
+症状・成分・医薬品情報を科学的根拠に基づいて提供し、ユーザーが正しい健康情報から正しい商品選択へたどり着く最短経路を提供します。
 
 ---
 
-## Quick Start
+## アーキテクチャ概要
 
-### Backend
+```
+mykenko.jp       ← Media / SEO / AI相談
+shop.mykenko.jp  ← Commerce / EC
+api.mykenko.jp   ← 内部API
+```
+
+## 技術スタック
+
+| 役割 | 技術 |
+|------|------|
+| Media Frontend | Next.js 14 (App Router) |
+| CMS | Payload CMS 3.x |
+| Database | PostgreSQL 16 |
+| Search | Meilisearch |
+| Vector DB | Qdrant |
+| LLM | Ollama (Llama3) |
+| Automation | n8n |
+| Commerce | Shofy (Laravel 11) |
+
+---
+
+## ローカル開発環境
+
+### 必要なもの
+- Node.js >= 20
+- pnpm >= 9
+- Docker & Docker Compose
+
+### セットアップ
 
 ```bash
-cd backend
+# 1. リポジトリをクローン
+git clone https://github.com/sasaharatakc/mykenko.git
+cd mykenko
 
-# Install dependencies
-composer install
-
-# Copy environment file
+# 2. 環境変数を設定
 cp .env.example .env
+# .env を編集して各種キーを設定
 
-# Generate app key
-php artisan key:generate
+# 3. Docker サービス起動
+docker compose up -d
 
-# Configure your database in .env, then run migrations + seed
-php artisan migrate --seed
+# 4. 依存関係インストール
+pnpm install
 
-# Create storage symlink
-php artisan storage:link
+# 5. DBマイグレーション
+pnpm db:migrate
 
-# Start the dev server (port 8000)
-php artisan serve
+# 6. 開発サーバー起動
+pnpm dev
 ```
 
-### Frontend
+### サービス一覧
 
-```bash
-cd frontend
-
-# Install dependencies
-npm install
-
-# Copy environment file
-cp .env.example .env.local
-
-# Start the dev server (port 3000)
-npm run dev
-```
+| サービス | URL |
+|---------|-----|
+| Media (Next.js) | http://localhost:3000 |
+| Payload Admin | http://localhost:3000/admin |
+| API | http://localhost:3001 |
+| n8n | http://localhost:5678 |
+| Meilisearch | http://localhost:7700 |
+| Qdrant | http://localhost:6333 |
 
 ---
 
-## Architecture
+## コンプライアンス
 
-```
-shofy-rewrite/
-├── backend/                  # Laravel 11 REST API
-│   ├── app/
-│   │   ├── Http/
-│   │   │   ├── Controllers/
-│   │   │   │   ├── Api/      # Public + customer API
-│   │   │   │   ├── Admin/    # Admin panel API
-│   │   │   │   └── Vendor/   # Store owner API
-│   │   │   ├── Resources/    # API response transformers
-│   │   │   └── Middleware/
-│   │   ├── Models/           # 30+ Eloquent models
-│   │   └── Services/         # Business logic layer
-│   ├── database/
-│   │   ├── migrations/       # 11 migration files
-│   │   └── seeders/
-│   └── routes/api.php        # All API routes
-│
-└── frontend/                 # Next.js 14 App Router
-    └── src/
-        ├── app/
-        │   ├── (store pages) shop, products, cart, checkout…
-        │   ├── account/      # Customer dashboard
-        │   ├── admin/        # Admin panel
-        │   └── vendor/       # Vendor dashboard
-        ├── components/
-        │   ├── layout/       # Header, Footer, SearchModal
-        │   ├── product/      # ProductCard, ProductFilter…
-        │   ├── cart/         # CartDrawer
-        │   └── ui/           # Pagination, StarRating, CountdownTimer
-        ├── store/            # Zustand stores (cart, auth, wishlist)
-        ├── lib/              # API client, utils
-        └── types/            # Full TypeScript types
-```
+このプロジェクトは医療・健康情報を扱います。**薬機法・景表法・医療広告ガイドライン**を最上位制約として全レイヤーに適用します。
 
-## API Endpoints
+- 医薬品の効能効果を保証する表現禁止
+- 根拠のない「No.1」「最安値」等禁止
+- 診断・治療判断・服薬指示禁止
+- 著者・監修者・参考文献の必須表示
 
-| Prefix | Auth | Description |
-|--------|------|-------------|
-| `GET /api/v1/products` | No | Product listing with filters |
-| `POST /api/v1/auth/login` | No | Customer login |
-| `POST /api/v1/cart` | No* | Add to cart |
-| `POST /api/v1/checkout` | Required | Place order |
-| `GET /api/v1/orders` | Required | Order history |
-| `GET /api/v1/admin/*` | Admin role | Admin management |
-| `GET /api/v1/vendor/*` | Any auth | Vendor dashboard |
+---
 
-*Cart works for both guests (session) and authenticated customers.
+## ドキュメント
 
-## Default Credentials (after seeding)
+`docs/` フォルダに全設計書を格納しています。
 
-- **Admin:** admin@shofy.com / password
+## ライセンス
 
-## Features
-
-- ✅ Multivendor marketplace with store management
-- ✅ Product catalog with variations, attributes, flash sales
-- ✅ Cart (guest + authenticated with merge)
-- ✅ Checkout with Stripe, PayPal, COD, bank transfer
-- ✅ Order tracking (public + authenticated)
-- ✅ Wishlist, compare, recently viewed
-- ✅ Review system with star ratings
-- ✅ Blog with categories and tags
-- ✅ Vendor dashboard with payout requests
-- ✅ Admin panel (products, orders, customers, stores, blog)
-- ✅ Coupon/discount system
-- ✅ Newsletter subscription
-- ✅ Responsive design (mobile-first)
-- ✅ Password reset via email
+Private — All rights reserved.
