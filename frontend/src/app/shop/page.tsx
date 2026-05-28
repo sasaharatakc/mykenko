@@ -1,9 +1,27 @@
 import { ShopContent } from './ShopContent'
 import type { Metadata } from 'next'
 
+const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://mykenko.com'
+
 export const metadata: Metadata = {
-  title: 'Shop - Browse All Products',
-  description: 'Browse thousands of products from verified vendors. Filter by category, brand, price and more.',
+  title: 'ショップ — 全商品一覧 | MYKENKO',
+  description: '認定ベンダーの医薬品・サプリメント・美容・健康商品を一覧で探せます。カテゴリ・ブランド・価格でフィルタリング可能。',
+  alternates: {
+    // フィルタ・ソート・ページネーションパラメータ付きURLを /shop に正規化
+    // 例: /shop?category=ed&sort=price → canonical は /shop
+    canonical: `${BASE}/shop`,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    // フィルタ系パラメータをクロールさせない（robots.ts の Disallow と二重保護）
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-snippet': -1,
+      'max-image-preview': 'large',
+    },
+  },
 }
 
 interface ShopPageProps {
