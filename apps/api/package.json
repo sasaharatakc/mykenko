@@ -1,0 +1,26 @@
+{
+  "name": "@mykenko/api",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Internal API server for MYKENKO (Hono + Node)",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc --project tsconfig.build.json",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext .ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.11.1",
+    "@mykenko/db": "workspace:*",
+    "@mykenko/schemas": "workspace:*",
+    "@mykenko/utils": "workspace:*",
+    "hono": "^4.4.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.15.5",
+    "typescript": "^5.4.5"
+  }
+}
