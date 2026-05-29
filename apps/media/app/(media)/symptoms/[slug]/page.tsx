@@ -1,151 +1,218 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
-// import { db } from '@/lib/db'
-// import { generateSymptomJsonLd } from '@mykenko/seo'
+import {
+  generateSymptomJsonLd,
+  generateBreadcrumbJsonLd,
+  generateFaqJsonLd,
+} from '@mykenko/seo'
 
-type Props = {
-  params: { slug: string }
+// ── Types ──────────────────────────────────────────────────────────────────────
+
+interface SymptomFaq {
+  question: string
+  answer: string
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const symptom = getSymptomBySlug(params.slug)
+interface SymptomDetail {
+  id: string
+  slug: string
+  nameJa: string
+  nameEn: string | null
+  descriptionJa: string | null
+  icdCode: string | null
+  severity: string | null
+  bodySystems: string[]
+  faqs: SymptomFaq[]
+  isPublished: boolean
+}
+
+// ── Data fetching ──────────────────────────────────────────────────────────────
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000'
+
+async function fetchSymptom(slug: string): Promise<SymptomDetail | null> {
+  try {
+    const res = await fetch(`${API_BASE}/api/symptoms/${slug}`, {
+      next: { revalidate: 3600 }, // ISR: 1 hour
+    })
+    if (res.status === 404) return null
+    if (!res.ok) throw new Error(`API error: ${res.status}`)
+    return res.json()
+  } catch {
+    return null
+  }
+}
+
+async function fetchAllSlugs(): Promise<string[]> {
+  try {
+    const res = await fetch(`${API_BASE}/api/symptoms?limit=1000&fields=slug`, {
+      next: { revalidate: 3600 },
+    })
+    if (!res.ok) return []
+    const data = await res.json()
+    return (data.data ?? []).map((s: { slug: string }) => s.slug)
+  } catch {
+    return []
+  }
+}
+
+// ── Static generation ──────────────────────────────────────────────────────────
+
+export async function generateStaticParams() {
+  const slugs = await fetchAllSlugs()
+  return slugs.map((slug) => ({ slug }))
+}
+
+// ── Metadata ───────────────────────────────────────────────────────────────────
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string }
+}): Promise<Metadata> {
+  const symptom = await fetchSymptom(params.slug)
   if (!symptom) return {}
 
+  const title = `${symptom.nameJa}とは？原因・症状・対策を解説 | MYKENKO`
+  const description =
+    symptom.descriptionJa?.slice(0, 120) ??
+    `${symptom.nameJa}についての一般情報をご紹介します。効果を保証するものではありません。医師・薬剤師にご相談ください。`
+
   return {
-    title: `${symptom.name}とは？原因・成分・対策 | MYKENKO`,
-    description: `${symptom.name}の原因・メカニズム・有効成分・研究・ FAQを解説。医師監修。効果を保証するものではありません。`,
+    title,
+    description,
     alternates: {
-      canonical: `https://mykenko.jp/symptoms/${params.slug}/`,
+      canonical: `https://mykenko.jp/symptoms/${symptom.slug}`,
     },
     openGraph: {
-      title: `${symptom.name}の情報 | MYKENKO`,
+      title,
+      description,
+      url: `https://mykenko.jp/symptoms/${symptom.slug}`,
+      siteName: 'MYKENKO',
+      locale: 'ja_JP',
       type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
     },
   }
 }
 
-// TODO: DBに切り替える
-export async function generateStaticParams() {
-  return SYMPTOM_SEEDS.map((s) => ({ slug: s.slug }))
-}
+// ── Page component ─────────────────────────────────────────────────────────────
 
-export default async function SymptomPage({ params }: Props) {
-  const symptom = getSymptomBySlug(params.slug)
-  if (!symptom) notFound()
+export default async function SymptomPage({ params }: { params: { slug: string } }) {
+  const symptom = await fetchSymptom(params.slug)
+  if (!symptom || !symptom.isPublished) notFound()
+
+  // JSON-LD
+  const symptomJsonLd = generateSymptomJsonLd({
+    name: symptom.nameJa,
+    description: symptom.descriptionJa ?? '',
+    slug: symptom.slug,
+    icdCode: symptom.icdCode ?? undefined,
+  })
+
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+    { name: 'ホーム', url: 'https://mykenko.jp' },
+    { name: '症状一覧', url: 'https://mykenko.jp/symptoms' },
+    { name: symptom.nameJa, url: `https://mykenko.jp/symptoms/${symptom.slug}` },
+  ])
+
+  const faqJsonLd =
+    symptom.faqs.length > 0
+      ? generateFaqJsonLd(symptom.faqs.map((f) => ({ question: f.question, answer: f.answer })))
+      : null
 
   return (
-    <article className="max-w-4xl mx-auto px-4 py-12">
-      {/* パンくず */}
-      <nav className="text-sm text-gray-500 mb-6">
-        <Link href="/" className="hover:text-primary">ホーム</Link>
-        {' > '}
-        <Link href="/symptoms/" className="hover:text-primary">症状一覧</Link>
-        {' > '}{symptom.name}
-      </nav>
+    <>
+      {/* JSON-LD structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(symptomJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
 
-      <h1 className="text-3xl font-bold mb-2">{symptom.name}とは</h1>
+      <main className="mx-auto max-w-3xl px-4 py-10">
+        {/* Breadcrumb */}
+        <nav aria-label="パンくずリスト" className="mb-6 text-sm text-gray-500">
+          <ol className="flex gap-2">
+            <li><a href="/">ホーム</a></li>
+            <li>/</li>
+            <li><a href="/symptoms">症状一覧</a></li>
+            <li>/</li>
+            <li aria-current="page">{symptom.nameJa}</li>
+          </ol>
+        </nav>
 
-      {/* 定義文（AI引用されやすい簡潔定義） */}
-      <p className="text-gray-700 mb-8 text-lg leading-relaxed">
-        {symptom.definition}
-      </p>
+        {/* Heading */}
+        <h1 className="mb-2 text-3xl font-bold">{symptom.nameJa}</h1>
+        {symptom.nameEn && (
+          <p className="mb-4 text-sm text-gray-400">{symptom.nameEn}</p>
+        )}
+        {symptom.icdCode && (
+          <p className="mb-6 text-xs text-gray-400">ICD コード: {symptom.icdCode}</p>
+        )}
 
-      {/* 原因・メカニズム */}
-      <section className="mb-8">
-        <h2 className="text-2xl font-bold mb-4">{symptom.name}の原因・メカニズム</h2>
-        <p className="text-gray-700 leading-relaxed">{symptom.mechanism}</p>
-      </section>
-
-      {/* 関連成分 */}
-      <section className="mb-8">
-        <h2 className="text-2xl font-bold mb-4">関連する成分・有効成分</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {symptom.relatedIngredients.map((ing) => (
-            <Link
-              key={ing.slug}
-              href={`/ingredients/${ing.slug}/`}
-              className="card p-4 hover:border-primary transition-colors"
-            >
-              <span className="font-bold">{ing.name}</span>
-              <p className="text-sm text-gray-600 mt-1">{ing.summary}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="mb-8">
-        <h2 className="text-2xl font-bold mb-4">よくある質問</h2>
-        <div className="space-y-4">
-          {symptom.faqs.map((faq, i) => (
-            <div key={i} className="card p-4">
-              <h3 className="font-bold text-primary mb-2">Q. {faq.question}</h3>
-              <p className="text-gray-700 text-sm">{faq.answer}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Commerce CTA */}
-      <section className="bg-primary-50 border border-primary rounded-xl p-6 mb-8">
-        <h3 className="font-bold text-lg mb-2">
-          {symptom.name}の関連商品を比較する
-        </h3>
-        <p className="text-sm text-gray-600 mb-4">
-          全ての商品は購入・使用前に必ず医師・薬剤師にご相談ください。効果を保証するものではありません。
-        </p>
-        <a
-          href={`${process.env.NEXT_PUBLIC_SHOP_URL ?? 'https://shop.mykenko.jp'}/category/${params.slug}/`}
-          className="btn-primary"
-          rel="noopener"
+        {/* Medical disclaimer — 薬機法・医療広告GL 必須 */}
+        <aside
+          role="note"
+          className="mb-8 rounded-md border border-yellow-300 bg-yellow-50 px-4 py-3 text-sm text-yellow-800"
         >
-          商品ランキングを見る →
-        </a>
-      </section>
+          本ページの情報は一般的な情報提供を目的としており、効果を保証するものではありません。
+          個人の症状・体質により異なります。購入・使用前に必ず医師・薬剤師にご相談ください。
+        </aside>
 
-      {/* 必須免賬表記 */}
-      <div className="medical-disclaimer">
-        <p className="font-bold mb-1">ご注意</p>
-        <p>
-          本ページは一般的な情報提供を目的としており、医療アドバイス・診断・治療の指示ではありません。
-          個人の症状や体質により異なります。必ず医師・薬剤師にご相談ください。
-          専門家の判断なしに医薬品を購入・使用されることはおすすめしません。
-        </p>
-      </div>
-    </article>
+        {/* Description */}
+        {symptom.descriptionJa && (
+          <section className="mb-8">
+            <h2 className="mb-3 text-xl font-semibold">概要</h2>
+            <p className="leading-relaxed text-gray-700">{symptom.descriptionJa}</p>
+          </section>
+        )}
+
+        {/* Body systems */}
+        {symptom.bodySystems.length > 0 && (
+          <section className="mb-8">
+            <h2 className="mb-3 text-xl font-semibold">関連する体の系統</h2>
+            <ul className="flex flex-wrap gap-2">
+              {symptom.bodySystems.map((bs) => (
+                <li
+                  key={bs}
+                  className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700"
+                >
+                  {bs}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* FAQ */}
+        {symptom.faqs.length > 0 && (
+          <section className="mb-8">
+            <h2 className="mb-4 text-xl font-semibold">よくある質問</h2>
+            <dl className="space-y-4">
+              {symptom.faqs.map((faq, i) => (
+                <div key={i} className="rounded-md border border-gray-200 p-4">
+                  <dt className="font-medium text-gray-900">Q. {faq.question}</dt>
+                  <dd className="mt-2 text-gray-600">A. {faq.answer}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
+      </main>
+    </>
   )
 }
-
-function getSymptomBySlug(slug: string) {
-  return SYMPTOM_SEEDS.find((s) => s.slug === slug) ?? null
-}
-
-// TODO: Payload CMS / DBに移行
-const SYMPTOM_SEEDS = [
-  {
-    slug: 'aga',
-    name: 'AGA（男性型脱毛症）',
-    definition:
-      'AGA（アンドロジェネティック・アロペシア）は、ディハイドロテストステロン（DHT）による進行性脱毛症であり、日本人男性の素4人に1人にみられる（日本皮膚科学会）。',
-    mechanism:
-      '5αリダクターゼによりテストステロンがDHTに変換され、毛髪当のアンドロゲン受容体に結合することで毛髪の成長期が短縮する。フィナステリドはII型5αリダクターゼを選択的に阻害し、DHT産生を抑制する。',
-    relatedIngredients: [
-      { slug: 'finasteride', name: 'フィナステリド', summary: 'II型5αリダクターゼ阻害剤。AGA処方薬。' },
-      { slug: 'minoxidil', name: 'ミノキシジル', summary: '血管拡張作用による育毛成分。市販・処方両方あり。' },
-      { slug: 'dutasteride', name: 'デュタステリド', summary: 'I型・II型両方5αリダクターゼ阻害剤。' },
-    ],
-    faqs: [
-      {
-        question: 'AGAは完治できますか？',
-        answer:
-          'AGAは多くの場合沿療による改善が記載されていますが、完治を保証するものではありません。実際の効果は個人差があります。必ず医師にご相談ください。',
-      },
-      {
-        question: 'AGAは何科を受診すればいいですか？',
-        answer:
-          '皮膚科や毛髪状態を専門とするクリニックが導口です。AGA専門外来やオンライン誊療クリニックも選択肢の一つです。',
-      },
-    ],
-  },
-]
