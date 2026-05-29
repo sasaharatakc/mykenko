@@ -1,69 +1,141 @@
-#!/usr/bin/env tsx
 /**
  * scripts/import-ingredients.ts
+ * Usage: pnpm tsx scripts/import-ingredients.ts [--dry-run] [--file path/to/csv]
  *
- * CSVファイルから成分マスタをPayload CMS / DBにインポートする。
- *
- * 使い方:
- *   pnpm tsx scripts/import-ingredients.ts --file data/seeds/ingredient_master.csv
- *
- * CSVフォーマット (ヘッダ行必須):
- *   slug,name_ja,name_en,cas_number,description_ja,evidence_level,safety_notes
+ * CSVからingredientsテーブルにupsertします。
+ * slug を一意キーとして ON CONFLICT DO UPDATE。
  */
 
-import fs from 'fs'
-import path from 'path'
 import { parse } from 'csv-parse/sync'
+import { readFileSync } from 'fs'
+import { resolve } from 'path'
+import { drizzle } from 'drizzle-orm/postgres-js'
+import postgres from 'postgres'
+import { ingredients } from '@mykenko/db'
+import { sql } from 'drizzle-orm'
+
+// ── CLI args ──────────────────────────────────────────────
+const args = process.argv.slice(2)
+const isDryRun = args.includes('--dry-run')
+const fileArgIdx = args.indexOf('--file')
+const csvPath =
+  fileArgIdx !== -1 && args[fileArgIdx + 1]
+    ? resolve(args[fileArgIdx + 1])
+    : resolve(process.cwd(), 'data/seeds/ingredient_master.csv')
+
+// ── DB connection ─────────────────────────────────────────
+const DATABASE_URL = process.env.DATABASE_URL
+if (!DATABASE_URL) {
+  console.error('❌  DATABASE_URL 環境変数が設定されていません')
+  process.exit(1)
+}
+
+type EvidenceLevel = 'A' | 'B' | 'C'
 
 interface IngredientRow {
   slug: string
   name_ja: string
   name_en?: string
-  cas_number?: string
   description_ja?: string
-  evidence_level?: 'A' | 'B' | 'C'
+  evidence_level?: string
+  cas_number?: string
   safety_notes?: string
+  sort_order?: string
+  is_published?: string
 }
 
 async function main() {
-  const args = process.argv.slice(2)
-  const fileIdx = args.indexOf('--file')
-  const filePath = fileIdx !== -1 ? args[fileIdx + 1] : 'data/seeds/ingredient_master.csv'
+  console.log(`📂 CSV: ${csvPath}`)
+  console.log(`🔧 Mode: ${isDryRun ? 'DRY RUN (DBへの書き込みなし)' : 'LIVE'}`)
+  console.log('')
 
-  if (!filePath || !fs.existsSync(filePath)) {
-    console.error(`CSVファイルが見つかりません: ${filePath}`)
-    process.exit(1)
-  }
-
-  const raw = fs.readFileSync(path.resolve(filePath), 'utf-8')
+  // Parse CSV
+  const raw = readFileSync(csvPath, 'utf-8')
   const rows: IngredientRow[] = parse(raw, {
     columns: true,
     skip_empty_lines: true,
     trim: true,
   })
 
-  console.warn(`📦 成分マスタ インポート開始: ${rows.length}件`)
+  console.log(`📋 ${rows.length} 件のレコードを読み込みました`)
 
-  let inserted = 0
-  let skipped = 0
-
-  for (const row of rows) {
-    if (!row.slug || !row.name_ja) {
-      console.warn(`  ⚠️  スキップ: slug または name_ja が空 → ${JSON.stringify(row)}`)
-      skipped++
-      continue
+  if (isDryRun) {
+    console.log('\n--- DRY RUN 出力 ---')
+    for (const row of rows) {
+      console.log(JSON.stringify(toRecord(row), null, 2))
     }
-
-    // TODO: Payload CMS REST API または Drizzle ORM で upsert
-    // 現状はドライランとして出力のみ
-    console.warn(`  ✅ ${row.slug} — ${row.name_ja} (証拠レベル: ${row.evidence_level ?? '-'})`)
-    inserted++
+    console.log('\n✅ Dry run 完了 (DBへの書き込みなし)')
+    return
   }
 
-  console.warn(`\n完了: ${inserted}件インポート、${skipped}件スキップ`)
+  // DB connection
+  const client = postgres(DATABASE_URL)
+  const db = drizzle(client)
+
+  let inserted = 0
+  let updated = 0
+  let errored = 0
+
+  for (const row of rows) {
+    const record = toRecord(row)
+
+    try {
+      await db
+        .insert(ingredients)
+        .values(record)
+        .onConflictDoUpdate({
+          target: ingredients.slug,
+          set: {
+            nameJa: record.nameJa,
+            nameEn: record.nameEn,
+            descriptionJa: record.descriptionJa,
+            evidenceLevel: record.evidenceLevel,
+            casNumber: record.casNumber,
+            safetyNotes: record.safetyNotes,
+            sortOrder: record.sortOrder,
+            isPublished: record.isPublished,
+            updatedAt: sql`now()`,
+          },
+        })
+
+      inserted++
+      console.log(`  ✅ [${record.slug}] ${record.nameJa} (エビデンス: ${record.evidenceLevel ?? '-'})`)
+    } catch (err) {
+      errored++
+      console.error(`  ❌ [${record.slug}] エラー:`, err instanceof Error ? err.message : err)
+    }
+  }
+
+  await client.end()
+
+  console.log(`\n📊 結果:`)
+  console.log(`  処理: ${inserted}件`)
+  console.log(`  エラー: ${errored}件`)
+
+  if (errored > 0) {
+    process.exit(1)
+  }
 }
 
-main().catch((e) => {
-  console.error(e)
+function toRecord(row: IngredientRow) {
+  const evidenceLevel = ['A', 'B', 'C'].includes(row.evidence_level ?? '')
+    ? (row.evidence_level as EvidenceLevel)
+    : null
+
+  return {
+    slug: row.slug,
+    nameJa: row.name_ja,
+    nameEn: row.name_en || null,
+    descriptionJa: row.description_ja || null,
+    evidenceLevel,
+    casNumber: row.cas_number || null,
+    safetyNotes: row.safety_notes || null,
+    sortOrder: row.sort_order ? parseInt(row.sort_order, 10) : 0,
+    isPublished: row.is_published?.toLowerCase() === 'true',
+  }
+}
+
+main().catch((err) => {
+  console.error('Fatal:', err)
   process.exit(1)
 })
