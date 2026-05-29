@@ -1,0 +1,11 @@
+slug,name_ja,name_en,icd_code,description_ja,body_systems,severity
+aga,男性型脱毛症（AGA）,Androgenetic Alopecia,L64,男性ホルモンの影響による進行性の脱毛症。一般的な情報として提供しており効果を保証するものではありません。,皮膚・毛髪,mild
+ed,勃起不全（ED）,Erectile Dysfunction,N52,勃起機能の低下に関する一般情報。医師・薬剤師にご相談ください。,泌尿生殖器,moderate
+insomnia,不眠症,Insomnia,G47.0,睡眠の質や量に関する問題。個人の症状や体質により異なります。,神経・精神,moderate
+obesity,肥満,Obesity,E66,体重管理に関する一般情報。購入・使用前に必ず専門家へご相談ください。,代謝・内分泌,moderate
+acne,ニキビ・にきび,Acne Vulgaris,L70.0,皮脂の過剰分泌による皮膚の炎症。一般的な情報提供を目的としています。,皮膚,mild
+fatigue,慢性疲労,Chronic Fatigue,R53,持続的な疲労感に関する一般情報。効果を保証するものではありません。,神経・精神,mild
+menopause,更年期障害,Menopause,N95.1,ホルモンバランスの変化による症状。医師・薬剤師にご相談ください。,婦人科・内分泌,moderate
+allergy-rhinitis,アレルギー性鼻炎,Allergic Rhinitis,J30,花粉・ハウスダストなどへのアレルギー反応。個人差があります。,呼吸器・免疫,mild
+liver-fatigue,肝機能低下,Liver Function Decline,K76.0,飲酒・過労等による肝臓への負担に関する情報。,消化器・肝臓,moderate
+joint-pain,関節痛,Joint Pain,M25.5,関節の痛みや不快感に関する一般情報。,運動器,moderate
