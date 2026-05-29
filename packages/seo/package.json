@@ -1,0 +1,14 @@
+{
+  "name": "@mykenko/seo",
+  "version": "0.0.1",
+  "private": true,
+  "description": "JSON-LD generators and Schema.org utilities for MYKENKO",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}

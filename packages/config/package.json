@@ -1,0 +1,18 @@
+{
+  "name": "@mykenko/config",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Shared TypeScript / ESLint / Tailwind configuration",
+  "exports": {
+    "./tsconfig.base.json": "./tsconfig.base.json",
+    "./tailwind": "./tailwind.preset.js",
+    "./eslint": "./eslint.config.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "eslint": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "^7.10.0",
+    "@typescript-eslint/parser": "^7.10.0",
+    "tailwindcss": "^3.4.3"
+  }
+}
