@@ -1,7 +1,7 @@
 {
   "name": "price-monitor",
   "version": "0.1.0",
-  "description": "osakadou.cool price monitor crawler",
+  "description": "osakadou.cool / medicine.shop price monitor crawler",
   "type": "module",
   "scripts": {
     "smoke": "node smoke-test-playwright.js",
@@ -13,7 +13,17 @@
     "scrape:log": "tail -f logs/scrape.log",
     "scrape:status": "cat data/scraper.pid 2>/dev/null | xargs -I{} ps -p {}",
     "scrape:stop": "cat data/scraper.pid 2>/dev/null | xargs kill && echo '停止しました' || echo 'PIDファイルが見つかりません'",
-    "count": "node -e \"const fs=require('fs'); for (const f of ['data/products.json','data/done_ids.json','data/missing_ids.json','data/errors.json']) { if (fs.existsSync(f)) { const d=JSON.parse(fs.readFileSync(f,'utf8')); console.log(f, Array.isArray(d) ? d.length : Object.keys(d).length); } }\""
+    "count": "node -e \"const fs=require('fs'); for (const f of ['data/products.json','data/done_ids.json','data/missing_ids.json','data/errors.json','data/medicine-products.json','data/medicine-done-ids.json']) { if (fs.existsSync(f)) { const d=JSON.parse(fs.readFileSync(f,'utf8')); console.log(f, Array.isArray(d) ? d.length : Object.keys(d).length); } }\"",
+
+    "urls:medicine": "node src/crawlers/medicine-shop-urls.js",
+    "urls:medicine:skip-ip": "SKIP_IP_CHECK=true node src/crawlers/medicine-shop-urls.js",
+    "smoke:medicine": "SKIP_IP_CHECK=true node scrape_medicine.js --test",
+    "test:medicine": "SKIP_IP_CHECK=true node scrape_medicine.js --test",
+    "scrape:medicine": "node scrape_medicine.js",
+    "scrape:medicine:bg": "mkdir -p logs data && nohup caffeinate -dimsu node scrape_medicine.js > logs/medicine-scrape.log 2>&1 & echo $! > data/medicine-scraper.pid && echo \"medicine.shop バックグラウンド開始 → npm run scrape:medicine:log で確認\"",
+    "scrape:medicine:log": "tail -f logs/medicine-scrape.log",
+    "scrape:medicine:stop": "cat data/medicine-scraper.pid 2>/dev/null | xargs kill && echo '停止しました' || echo 'PIDファイルが見つかりません'",
+    "export:medicine": "node export.js --source medicine"
   },
   "dependencies": {
     "crawlee": "^3.10.0",

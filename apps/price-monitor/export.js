@@ -4,6 +4,7 @@
  *
  * 使い方:
  *   node export.js
+ *   node export.js --source medicine     # medicine.shop データ
  *   node export.js --output results/products.csv
  */
 
@@ -13,7 +14,9 @@ import { dirname, resolve } from 'path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = resolve(__dirname, 'data');
-const PRODUCTS_PATH = resolve(DATA_DIR, 'products.json');
+
+const sourceArg = (() => { const i = process.argv.indexOf('--source'); return i !== -1 ? process.argv[i + 1] : null; })();
+const PRODUCTS_PATH = resolve(DATA_DIR, sourceArg === 'medicine' ? 'medicine-products.json' : 'products.json');
 
 function escapeCsv(val) {
   if (val === null || val === undefined) return '';
