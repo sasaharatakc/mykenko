@@ -3,10 +3,17 @@
   "version": "0.1.0",
   "description": "osakadou.cool price monitor crawler",
   "type": "module",
-  "main": "src/index.js",
   "scripts": {
-    "crawl:osakadou": "node src/crawlers/osakadou.js",
-    "crawl:urls": "node src/crawlers/osakadou.js"
+    "smoke": "node smoke-test-playwright.js",
+    "test:scrape": "node scrape_playwright.js --test",
+    "scrape": "node scrape_playwright.js",
+    "export": "node export.js",
+    "reset": "node reset-data.js",
+    "scrape:bg": "mkdir -p logs data && nohup caffeinate -dimsu node scrape_playwright.js > logs/scrape.log 2>&1 & echo $! > data/scraper.pid && echo \"バックグラウンド開始 PID=$(cat data/scraper.pid) → npm run scrape:log で確認\"",
+    "scrape:log": "tail -f logs/scrape.log",
+    "scrape:status": "cat data/scraper.pid 2>/dev/null | xargs -I{} ps -p {}",
+    "scrape:stop": "cat data/scraper.pid 2>/dev/null | xargs kill && echo '停止しました' || echo 'PIDファイルが見つかりません'",
+    "count": "node -e \"const fs=require('fs'); for (const f of ['data/products.json','data/done_ids.json','data/missing_ids.json','data/errors.json']) { if (fs.existsSync(f)) { const d=JSON.parse(fs.readFileSync(f,'utf8')); console.log(f, Array.isArray(d) ? d.length : Object.keys(d).length); } }\""
   },
   "dependencies": {
     "crawlee": "^3.10.0",

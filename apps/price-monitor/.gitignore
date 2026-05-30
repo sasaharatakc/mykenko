@@ -1,5 +1,7 @@
 node_modules/
 data/*.json
-logs/*.json
+data/*.csv
+data/scraper.pid
+logs/
 storage/
 .env
