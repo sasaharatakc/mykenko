@@ -1,0 +1,19 @@
+{
+  "name": "price-monitor",
+  "version": "0.1.0",
+  "description": "osakadou.cool price monitor crawler",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "crawl:osakadou": "node src/crawlers/osakadou.js",
+    "crawl:urls": "node src/crawlers/osakadou.js"
+  },
+  "dependencies": {
+    "crawlee": "^3.10.0",
+    "dotenv": "^16.4.5",
+    "playwright": "1.56.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
