@@ -61,20 +61,22 @@ export default buildConfig({
     },
   }),
 
-  email: process.env.SMTP_HOST
-    ? nodemailerAdapter({
-        defaultFromAddress: process.env.SMTP_FROM ?? 'noreply@mykenko.jp',
-        defaultFromName: 'MYKENKO CMS',
-        transportOptions: {
-          host: process.env.SMTP_HOST,
-          port: Number(process.env.SMTP_PORT ?? 587),
-          auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
+  ...(process.env.SMTP_HOST
+    ? {
+        email: nodemailerAdapter({
+          defaultFromAddress: process.env.SMTP_FROM ?? 'noreply@mykenko.jp',
+          defaultFromName: 'MYKENKO CMS',
+          transportOptions: {
+            host: process.env.SMTP_HOST,
+            port: Number(process.env.SMTP_PORT ?? 587),
+            auth: {
+              user: process.env.SMTP_USER,
+              pass: process.env.SMTP_PASS,
+            },
           },
-        },
-      })
-    : undefined,
+        }),
+      }
+    : {}),
 
   upload: {
     limits: {

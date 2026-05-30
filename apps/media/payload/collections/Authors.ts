@@ -36,8 +36,8 @@ export const Authors: CollectionConfig = {
       admin: {
         description: '英小文字・ハイフンのみ使用可 (例: taro-yamada)',
       },
-      validate: (val: string) => {
-        if (!val) return '必須項目です'
+      validate: (val: string | string[] | null | undefined) => {
+        if (!val || Array.isArray(val)) return '必須項目です'
         if (!/^[a-z0-9-]+$/.test(val)) return '英小文字・数字・ハイフンのみ使用可'
         return true
       },

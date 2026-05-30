@@ -111,7 +111,7 @@ export default async function SymptomPage({ params }: { params: { slug: string }
     name: symptom.nameJa,
     description: symptom.descriptionJa ?? '',
     slug: symptom.slug,
-    icdCode: symptom.icdCode ?? undefined,
+    ...(symptom.icdCode ? { icdCode: symptom.icdCode } : {}),
   })
 
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([
