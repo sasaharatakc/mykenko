@@ -106,42 +106,58 @@ function saveState(state) {
   saveJson(ERRORS_PATH, state.errors);
 }
 
-// ── 商品データ抽出 ────────────────────────────────────────────────────────────
+// ── 商品データ抽出（medicine.shop /productdetail/PROD-XX 対応） ────────────────
 
 async function extractProduct(page) {
-  // 商品名（medicine.shop のセレクタを調整可能）
+  // medicine.shop のページ全体からテキストをダンプしてデバッグ用に構造確認
+  const bodyText = await page.$eval('body', (el) => el.innerText?.slice(0, 500) ?? '').catch(() => '');
+
+  // 商品名: h1 を優先
   const name = await page.$eval(
-    'h1.product-name, h1[class*="name"], h1[class*="title"], .itemName, .item-name, .product_name, h1',
+    'h1',
     (el) => el.textContent?.trim() ?? ''
   ).catch(() => '');
 
-  // 価格（税込優先）
-  const price = await page.$eval(
-    '[class*="tax"], [class*="taxIncl"], [class*="price-tax"], .price_including_tax, .itemPrice, [class*="selling"]:not([class*="before"])',
-    (el) => el.textContent?.trim() ?? ''
-  ).catch(async () =>
-    page.$eval('[class*="price"], .price, .item-price', (el) => el.textContent?.trim() ?? '').catch(() => '')
+  // 価格: テキストに「円」「¥」を含む要素を探す
+  const price = await page.evaluate(() => {
+    const els = Array.from(document.querySelectorAll('*'));
+    for (const el of els) {
+      if (el.children.length > 0) continue; // 子要素のないテキストノードのみ
+      const t = el.textContent?.trim() ?? '';
+      if (/[¥￥][\d,]+|[\d,]+円/.test(t) && t.length < 30) return t;
+    }
+    return '';
+  }).catch(() => '');
+
+  // 画像URL: og:image → メイン画像 → 最初のimg
+  const imageUrl = await page.$eval('meta[property="og:image"]', (el) => el.content ?? '').catch(async () =>
+    page.$eval(
+      '[class*="product"] img, [class*="detail"] img, main img, article img',
+      (el) => el.src ?? ''
+    ).catch(async () =>
+      page.$eval('img', (el) => el.src ?? '').catch(() => '')
+    )
   );
 
-  // 画像URL
-  const imageUrl = await page.$eval(
-    '.productImage img, .item-image img, .main-image img, [class*="product"] img, [class*="item"] img',
-    (el) => el.src ?? ''
-  ).catch(async () =>
-    page.$eval('img[src*="item"], img[src*="product"], img[src*="goods"]', (el) => el.src ?? '').catch(() => '')
-  );
-
-  // 在庫
+  // 在庫: カートボタンがあれば在庫あり
   const inStock = await page.$eval(
-    'button[class*="cart"], .addToCart, .btn-cart, [class*="buy"]',
-    (el) => !el.disabled && !el.className.includes('sold') && !el.textContent?.includes('完売')
+    'button, [class*="cart"], [class*="buy"], [class*="order"]',
+    (el) => {
+      const t = el.textContent?.trim() ?? '';
+      return !t.includes('完売') && !t.includes('在庫なし') && !el.hasAttribute('disabled');
+    }
   ).catch(() => null);
 
-  // JANコード（あれば）
-  const janCode = await page.$eval(
-    '[class*="jan"], [class*="ean"], [data-jan]',
-    (el) => el.textContent?.trim() ?? el.dataset?.jan ?? ''
-  ).catch(() => '');
+  // JANコード
+  const janCode = await page.evaluate(() => {
+    const els = Array.from(document.querySelectorAll('[class*="jan"], [data-jan], [class*="ean"]'));
+    return els[0]?.textContent?.trim() ?? '';
+  }).catch(() => '');
+
+  // セレクタが全て外れた場合のデバッグ情報
+  if (!name && !price) {
+    console.log('    [debug] bodyText:', bodyText.replace(/\n/g, ' ').slice(0, 200));
+  }
 
   return { name, price, imageUrl, inStock, janCode };
 }
