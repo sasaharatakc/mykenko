@@ -71,6 +71,13 @@ async function checkCountry() {
   try {
     const res = await fetch('https://ipinfo.io/country');
     const country = (await res.text()).trim();
+    // 2文字の国コード以外はネットワーク/プロキシエラーと判断
+    if (!/^[A-Z]{2}$/.test(country)) {
+      console.error(`\n❌ IP国籍を取得できませんでした（応答: "${country}"）`);
+      console.error('   クラウド環境からは実行できません。');
+      console.error('   ローカルMac + 日本VPN接続済みの環境で実行してください。');
+      process.exit(1);
+    }
     console.log(`   検出された国: ${country}`);
     if (country !== 'JP') {
       console.error(`\n❌ IP国籍が JP ではありません（${country}）`);
