@@ -1,0 +1,8 @@
+{
+  "extends": "@mykenko/config/tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "noEmit": true
+  },
+  "include": ["./**/*.ts"]
+}
