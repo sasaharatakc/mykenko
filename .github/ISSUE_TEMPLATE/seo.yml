@@ -1,0 +1,55 @@
+name: "🔍 SEO / GEO"
+description: SEO改善・構造化データ・AI検索対応
+title: "[SEO] "
+labels: ["type:seo", "status:todo"]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: 目的
+      description: 何を改善・獲得したいですか？（例：特定キーワードで上位表示）
+    validations:
+      required: true
+
+  - type: dropdown
+    id: seo_type
+    attributes:
+      label: SEO種別
+      options:
+        - テクニカルSEO
+        - オンページSEO
+        - 構造化データ（JSON-LD）
+        - サイトマップ
+        - 内部リンク
+        - コンテンツSEO
+        - GEO（AI検索最適化）
+        - ローカルSEO
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 優先度
+      options:
+        - "S"
+        - "A"
+        - "B"
+        - "C"
+    validations:
+      required: true
+
+  - type: textarea
+    id: target_kw
+    attributes:
+      label: 対象キーワード・URL
+      description: 狙うキーワードや対象ページURLを記載
+    validations:
+      required: false
+
+  - type: textarea
+    id: done
+    attributes:
+      label: 完了条件
+    validations:
+      required: true
