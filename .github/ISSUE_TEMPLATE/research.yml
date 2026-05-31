@@ -1,0 +1,55 @@
+name: "🔬 Research"
+description: 市場調査・競合分析・技術調査
+title: "[Research] "
+labels: ["type:research", "status:todo"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: 調査課題
+      description: 何を知りたいですか？どんな判断をするために調査しますか？
+    validations:
+      required: true
+
+  - type: dropdown
+    id: research_type
+    attributes:
+      label: 調査種別
+      options:
+        - 市場調査
+        - 競合分析
+        - 技術調査
+        - 規制・法律調査
+        - ユーザー調査
+        - キーワード調査
+        - 価格調査
+        - その他
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 優先度
+      options:
+        - "S"
+        - "A"
+        - "B"
+        - "C"
+    validations:
+      required: true
+
+  - type: textarea
+    id: output_format
+    attributes:
+      label: 期待する出力形式
+      description: レポート、スプレッドシート、GitHub Issue化など
+    validations:
+      required: true
+
+  - type: textarea
+    id: done
+    attributes:
+      label: 完了条件
+    validations:
+      required: true
