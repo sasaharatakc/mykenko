@@ -1,0 +1,63 @@
+name: "🤖 Automation"
+description: n8n・GitHub Actions・Crew自動化・スケジュール処理
+title: "[Automation] "
+labels: ["type:automation", "status:todo"]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: 自動化の目的
+      description: 何を自動化して、どんな工数・コストを削減しますか？
+    validations:
+      required: true
+
+  - type: dropdown
+    id: tool
+    attributes:
+      label: 使用ツール
+      multiple: true
+      options:
+        - n8n
+        - GitHub Actions
+        - Claude / Codex
+        - Crew AI
+        - Playwright
+        - Crawlee
+        - cron / スケジューラー
+        - その他
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 優先度
+      options:
+        - "S"
+        - "A"
+        - "B"
+        - "C"
+    validations:
+      required: true
+
+  - type: textarea
+    id: trigger
+    attributes:
+      label: トリガー条件
+      description: いつ・何をきっかけに動きますか？（例：毎朝6時、価格変動時）
+    validations:
+      required: true
+
+  - type: textarea
+    id: output
+    attributes:
+      label: 期待する出力・結果
+    validations:
+      required: true
+
+  - type: textarea
+    id: done
+    attributes:
+      label: 完了条件
+    validations:
+      required: true
