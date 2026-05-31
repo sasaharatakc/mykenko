@@ -1,0 +1,65 @@
+name: "⚖️ Compliance"
+description: 薬機法・景表法・YMYL・ステマ規制対応
+title: "[Compliance] "
+labels: ["type:compliance", "status:todo", "risk:legal"]
+body:
+  - type: textarea
+    id: issue
+    attributes:
+      label: コンプライアンス課題
+      description: どのような法的リスク・表現問題がありますか？
+    validations:
+      required: true
+
+  - type: dropdown
+    id: law_type
+    attributes:
+      label: 該当法規
+      multiple: true
+      options:
+        - 薬機法（医薬品医療機器等法）
+        - 景品表示法
+        - YMYL（医療・健康）
+        - ステマ規制
+        - 個人情報保護法
+        - 特定商取引法
+        - その他
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk_level
+    attributes:
+      label: リスクレベル
+      options:
+        - "HIGH — 即時対応必須"
+        - "MEDIUM — 今月中に対応"
+        - "LOW — 確認・記録のみ"
+    validations:
+      required: true
+
+  - type: textarea
+    id: target
+    attributes:
+      label: 対象コンテンツ・URL・ファイル
+      description: どのページ・コンポーネント・文章が対象ですか？
+    validations:
+      required: true
+
+  - type: textarea
+    id: action
+    attributes:
+      label: 対応方針
+      description: どう修正・対応しますか？
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: 確認チェック
+      options:
+        - label: 医療効果を断定していない
+        - label: 「治る」「効く」「必ず」を使っていない
+        - label: 比較表現に根拠がある
+        - label: 専門家確認が必要な場合は記載した
