@@ -12,6 +12,77 @@ Kingmaker → Gamechanger → @router → Crew選定 → Agent実行 → Skill�
 - 医療/YMYL/医薬品コンテンツは効果の断言を避け、コンプライアンスレビューを実行
 - SEO/GEO/SNS/PRは戦略・実行・レビュー・メモリ書き戻しを分離
 
+---
+
+## GitHub 運用ルール（SSOT）
+
+### 原則
+GitHubをすべての作業の単一の真実の源（SSOT）とする。
+**Issue がなければ作業を開始しない。**
+
+### 作業フロー
+```
+Issue作成 → Branch作成 → 実装 → PR作成 → CI確認 → Review → Merge
+```
+
+### ブランチ命名規則
+```
+feature/{issue-number}-{short-name}    # 新機能
+fix/{issue-number}-{short-name}        # バグ修正
+content/{issue-number}-{short-name}    # コンテンツ
+seo/{issue-number}-{short-name}        # SEO対応
+compliance/{issue-number}-{short-name} # 規制対応
+devops/{issue-number}-{short-name}     # インフラ・CI
+```
+
+例：
+```
+feature/21-product-page-v2
+compliance/22-yakukiho-review
+seo/23-product-schema
+```
+
+### Issueラベル体系
+```
+type:feature / type:bug / type:content / type:seo
+type:compliance / type:research / type:automation / type:devops
+
+priority:S  # 売上・法規制・重大バグに直結 → 即日対応
+priority:A  # 今週やる
+priority:B  # 余裕があれば
+priority:C  # いつか
+
+status:todo / status:doing / status:review / status:blocked / status:done
+
+area:media / area:shop / area:ai / area:price-monitor / area:admin / area:infra
+
+risk:low / risk:medium / risk:high / risk:legal
+```
+
+### 毎朝確認する順番
+1. `priority:S` のIssue
+2. `status:blocked` のIssue
+3. `status:review` のIssue
+4. 承認待ちPR（Checks ✅ かつ Review済み）
+5. 失敗しているActions
+
+### PR作成時の必須項目
+- 概要・関連Issue（`Closes #番号`）
+- 変更内容リスト
+- 動作確認チェック
+- 規制チェック（コンテンツ変更時は必須）
+- Claude/Codexへの申し送り
+- 残課題
+
+### mainブランチ保護（必須設定）
+以下をGitHub Settings > Branches で手動設定：
+- mainへの直接push禁止
+- PR必須（最低1件のReview）
+- CI（Actions）成功必須
+- force push禁止・delete禁止
+
+---
+
 ## デフォルトビルドコマンド
 - JavaScript/Next.js: `npm run lint`, `npm test`, `npm run build`
 - PHP/Laravel: `php artisan test`, `php artisan route:list`
@@ -20,6 +91,8 @@ Kingmaker → Gamechanger → @router → Crew選定 → Agent実行 → Skill�
 
 ## 出力標準
 完了したタスクには必ず含める：変更ファイル、検証結果、リスク、次のアクション
+
+---
 
 ## Crew構成（153エージェント）
 | Crew | 目的 | 主要Agent |
@@ -42,7 +115,7 @@ Kingmaker → Gamechanger → @router → Crew選定 → Agent実行 → Skill�
 
 ## スキル一覧（63スキル）
 | カテゴリ | スキル数 | 主要スキル |
-|--------|--------|---------|
+|--------|--------|---------| 
 | router | 7 | /route-task, /crew-select, /parallel-run, /workflow-gen, /context-compress, /priority-sort |
 | seo | 14 | /seo-audit, /keyword-research, /content-brief, /technical-check, /ai-overview-optimize, /backlink-strategy |
 | geo-llmo | 3 | /geo-audit, /entity-extract, /citation-build |
