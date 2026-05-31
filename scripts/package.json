@@ -1,0 +1,25 @@
+{
+  "name": "@mykenko/scripts",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Data import / seed scripts for MYKENKO",
+  "scripts": {
+    "import:symptoms": "tsx import-symptoms.ts",
+    "import:symptoms:dry": "tsx import-symptoms.ts --dry-run",
+    "import:ingredients": "tsx import-ingredients.ts",
+    "import:ingredients:dry": "tsx import-ingredients.ts --dry-run",
+    "import:all": "tsx import-symptoms.ts && tsx import-ingredients.ts"
+  },
+  "dependencies": {
+    "@mykenko/db": "workspace:*",
+    "csv-parse": "^5.5.5",
+    "drizzle-orm": "^0.30.10",
+    "postgres": "^3.4.4"
+  },
+  "devDependencies": {
+    "@mykenko/config": "workspace:*",
+    "@types/node": "^20.0.0",
+    "tsx": "^4.15.5",
+    "typescript": "^5.4.5"
+  }
+}

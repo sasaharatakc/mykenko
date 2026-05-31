@@ -85,53 +85,49 @@ async function main() {
 
     await page.waitForTimeout(2000);
 
-    // 商品名
-    const name = await page
-      .$eval(
-        'h1.product-name, h1[class*="name"], h1[class*="title"], .product-name h1, .item-name, h1',
-        (el) => el.textContent?.trim() ?? ''
-      )
-      .catch(() => '');
+    // medicine.shop DOM（判明済み）: .total-price.new / .new_price / .per-tablet-price / [data-price]
+    const name = await page.$eval('h1', (el) => el.textContent?.trim() ?? '').catch(() => '');
 
-    // 価格（税込優先）
-    const price = await page
-      .$eval(
-        '[class*="tax-included"], [class*="price-tax"], .price-tax, .price_including_tax, [class*="price"]:not([class*="original"]):not([class*="before"])',
-        (el) => el.textContent?.trim() ?? ''
-      )
-      .catch(async () => {
-        return page
-          .$eval('[class*="price"], .price', (el) => el.textContent?.trim() ?? '')
-          .catch(() => '');
-      });
+    const price = await page.evaluate(() => {
+      for (const s of ['.total-price.new', '.new_price', '.per-tablet-price']) {
+        const t = document.querySelector(s)?.textContent?.trim();
+        if (t) return t;
+      }
+      return '';
+    }).catch(() => '');
 
-    // 画像URL
+    const oldPrice = await page.$eval('.old_price', (el) => el.textContent?.trim() ?? '').catch(() => '');
+    const perTablet = await page.$eval('.per-tablet-price', (el) => el.textContent?.trim() ?? '').catch(() => '');
+
+    const variants = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('[data-price]')).map((b) => ({
+        label: b.textContent?.trim(),
+        price: b.getAttribute('data-price'),
+      }))
+    ).catch(() => []);
+
     const imageUrl = await page
-      .$eval(
-        '.product-image img, .main-image img, [class*="product"] img, [class*="item"] img',
-        (el) => (el as HTMLImageElement).src ?? ''
-      )
-      .catch(async () => {
-        return page.$eval('img', (el) => (el as HTMLImageElement).src ?? '').catch(() => '');
-      });
+      .$eval('meta[property="og:image"]', (el) => el.getAttribute('content') ?? '')
+      .catch(async () => page.$eval('main img, article img', (el) => el.src ?? '').catch(() => ''));
 
-    // 在庫
-    const inStock = await page
-      .$eval(
-        'button[class*="cart"], button[class*="buy"], .add-to-cart, [class*="soldout"]',
-        (el) => !el.textContent?.includes('完売') && !el.className.includes('soldout')
-      )
-      .catch(() => null);
+    const inStock = await page.evaluate(() => {
+      const body = document.body.innerText;
+      if (body.includes('完売') || body.includes('在庫なし')) return false;
+      return !!document.querySelector('[data-price], button[class*="cart"]');
+    }).catch(() => null);
 
     console.log('\n📦 抽出結果:');
-    console.log(`   商品名  : ${name || '(取得できず)'}`);
-    console.log(`   価格    : ${price || '(取得できず)'}`);
-    console.log(`   画像URL : ${imageUrl || '(取得できず)'}`);
-    console.log(`   在庫    : ${inStock === null ? '(不明)' : inStock ? '○' : '×'}`);
+    console.log(`   商品名      : ${name || '(取得できず)'}`);
+    console.log(`   価格(新)    : ${price || '(取得できず)'}`);
+    console.log(`   価格(旧)    : ${oldPrice || '-'}`);
+    console.log(`   1錠あたり   : ${perTablet || '-'}`);
+    console.log(`   バリアント  : ${variants.length}件 ${JSON.stringify(variants.slice(0, 3))}`);
+    console.log(`   画像URL     : ${imageUrl || '(取得できず)'}`);
+    console.log(`   在庫        : ${inStock === null ? '(不明)' : inStock ? '○' : '×'}`);
 
     if (!name && !price) {
       console.log('\n⚠️ 商品名・価格ともに取得できませんでした。');
-      console.log('   HEADLESS=false で確認し、CSSセレクタを調整してください。');
+      console.log('   HEADLESS=false で確認してください。');
     } else {
       console.log('\n✅ スモークテスト成功');
     }

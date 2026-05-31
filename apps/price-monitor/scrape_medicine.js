@@ -107,59 +107,73 @@ function saveState(state) {
 }
 
 // ── 商品データ抽出（medicine.shop /productdetail/PROD-XX 対応） ────────────────
+// DOM構造（判明済み）:
+//   価格: domcontentloaded 時点でHTML内に存在（XHR不要）
+//   単位: 円（¥ではない）
+//   クラス: .old_price / .new_price / .per-tablet-price / .total-price.new
+//   バリアント: [data-price] ボタン + "N枚 OF M錠" テキスト
 
 async function extractProduct(page) {
-  // medicine.shop のページ全体からテキストをダンプしてデバッグ用に構造確認
-  const bodyText = await page.$eval('body', (el) => el.innerText?.slice(0, 500) ?? '').catch(() => '');
+  // 商品名
+  const name = await page.$eval('h1', (el) => el.textContent?.trim() ?? '').catch(() => '');
 
-  // 商品名: h1 を優先
-  const name = await page.$eval(
-    'h1',
-    (el) => el.textContent?.trim() ?? ''
-  ).catch(() => '');
-
-  // 価格: テキストに「円」「¥」を含む要素を探す
+  // 価格: .total-price.new（税込合計）→ .new_price → .per-tablet-price の順で優先
   const price = await page.evaluate(() => {
-    const els = Array.from(document.querySelectorAll('*'));
-    for (const el of els) {
-      if (el.children.length > 0) continue; // 子要素のないテキストノードのみ
-      const t = el.textContent?.trim() ?? '';
-      if (/[¥￥][\d,]+|[\d,]+円/.test(t) && t.length < 30) return t;
+    const sel = [
+      '.total-price.new',
+      '.new_price',
+      '.per-tablet-price',
+      '.old_price',
+    ];
+    for (const s of sel) {
+      const el = document.querySelector(s);
+      const t = el?.textContent?.trim() ?? '';
+      if (t) return t;
     }
     return '';
   }).catch(() => '');
 
-  // 画像URL: og:image → メイン画像 → 最初のimg
-  const imageUrl = await page.$eval('meta[property="og:image"]', (el) => el.content ?? '').catch(async () =>
-    page.$eval(
-      '[class*="product"] img, [class*="detail"] img, main img, article img',
-      (el) => el.src ?? ''
-    ).catch(async () =>
-      page.$eval('img', (el) => el.src ?? '').catch(() => '')
-    )
-  );
+  // 旧価格（値引き前）
+  const oldPrice = await page.$eval('.old_price', (el) => el.textContent?.trim() ?? '').catch(() => '');
 
-  // 在庫: カートボタンがあれば在庫あり
-  const inStock = await page.$eval(
-    'button, [class*="cart"], [class*="buy"], [class*="order"]',
-    (el) => {
-      const t = el.textContent?.trim() ?? '';
-      return !t.includes('完売') && !t.includes('在庫なし') && !el.hasAttribute('disabled');
-    }
-  ).catch(() => null);
+  // 1錠あたり価格
+  const perTabletPrice = await page.$eval('.per-tablet-price', (el) => el.textContent?.trim() ?? '').catch(() => '');
 
-  // JANコード
-  const janCode = await page.evaluate(() => {
-    const els = Array.from(document.querySelectorAll('[class*="jan"], [data-jan], [class*="ean"]'));
-    return els[0]?.textContent?.trim() ?? '';
+  // バリアント情報（選択中のボタン）
+  const variants = await page.evaluate(() => {
+    const btns = Array.from(document.querySelectorAll('[data-price]'));
+    return btns.map((btn) => ({
+      label: btn.textContent?.trim() ?? '',
+      price: btn.getAttribute('data-price') ?? '',
+      selected: btn.classList.contains('selected') || btn.hasAttribute('aria-selected'),
+    }));
+  }).catch(() => []);
+
+  // 枚数・錠数情報（例: "30錠 × 3シート"）
+  const quantityText = await page.evaluate(() => {
+    const t = document.body.innerText;
+    const m = t.match(/\d+\s*(?:錠|粒|枚|シート|包|袋|本)\s*(?:×\s*\d+\s*(?:錠|粒|枚|シート|包|袋|本))?/);
+    return m ? m[0].trim() : '';
   }).catch(() => '');
 
-  // セレクタが全て外れた場合のデバッグ情報
-  if (!name && !price) {
-    console.log('    [debug] bodyText:', bodyText.replace(/\n/g, ' ').slice(0, 200));
-  }
+  // 画像URL: og:image → メイン商品画像
+  const imageUrl = await page
+    .$eval('meta[property="og:image"]', (el) => el.getAttribute('content') ?? '')
+    .catch(async () =>
+      page
+        .$eval('[class*="product"] img, [class*="detail"] img, main img', (el) => el.src ?? '')
+        .catch(() => '')
+    );
 
-  return { name, price, imageUrl, inStock, janCode };
+  // 在庫
+  const inStock = await page.evaluate(() => {
+    const body = document.body.innerText;
+    if (body.includes('完売') || body.includes('在庫なし') || body.includes('Out of stock')) return false;
+    const cartBtn = document.querySelector('[data-price], button[class*="cart"], button[class*="buy"]');
+    return cartBtn ? !cartBtn.hasAttribute('disabled') : null;
+  }).catch(() => null);
+
+  return { name, price, oldPrice, perTabletPrice, variants, quantityText, imageUrl, inStock };
 }
 
 // ── 単一ページ取得 ────────────────────────────────────────────────────────────
@@ -209,9 +223,12 @@ async function scrapeOne(browser, entry, state) {
       titleFromUrl: title,
       name: extracted.name,
       price: extracted.price,
+      oldPrice: extracted.oldPrice,
+      perTabletPrice: extracted.perTabletPrice,
+      variants: extracted.variants,
+      quantityText: extracted.quantityText,
       imageUrl: extracted.imageUrl,
       inStock: extracted.inStock,
-      janCode: extracted.janCode,
       scrapedAt: new Date().toISOString(),
     });
     state.doneIds.add(id);
