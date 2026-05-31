@@ -1,6 +1,6 @@
 {
   "name": "price-monitor",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "osakadou.cool / medicine.shop price monitor crawler",
   "type": "module",
   "scripts": {
@@ -9,23 +9,34 @@
     "scrape": "node scrape_playwright.js",
     "export": "node export.js",
     "reset": "node reset-data.js",
-    "scrape:bg": "mkdir -p logs data && nohup caffeinate -dimsu node scrape_playwright.js > logs/scrape.log 2>&1 & echo $! > data/scraper.pid && echo \"バックグラウンド開始 PID=$(cat data/scraper.pid) → npm run scrape:log で確認\"",
+    "scrape:bg": "mkdir -p logs data && nohup caffeinate -dimsu node scrape_playwright.js > logs/scrape.log 2>&1 & echo $! > data/scraper.pid && echo \"バックグラウンド開始 → npm run scrape:log\"",
     "scrape:log": "tail -f logs/scrape.log",
     "scrape:status": "cat data/scraper.pid 2>/dev/null | xargs -I{} ps -p {}",
-    "scrape:stop": "cat data/scraper.pid 2>/dev/null | xargs kill && echo '停止しました' || echo 'PIDファイルが見つかりません'",
-    "count": "node -e \"const fs=require('fs'); for (const f of ['data/products.json','data/done_ids.json','data/missing_ids.json','data/errors.json','data/medicine-products.json','data/medicine-done-ids.json']) { if (fs.existsSync(f)) { const d=JSON.parse(fs.readFileSync(f,'utf8')); console.log(f, Array.isArray(d) ? d.length : Object.keys(d).length); } }\"",
+    "scrape:stop": "cat data/scraper.pid 2>/dev/null | xargs kill && echo '停止' || echo 'PIDなし'",
 
     "urls:medicine": "node src/crawlers/medicine-shop-urls.js",
     "urls:medicine:skip-ip": "SKIP_IP_CHECK=true node src/crawlers/medicine-shop-urls.js",
-    "smoke:medicine": "SKIP_IP_CHECK=true node scrape_medicine.js --test",
     "test:medicine": "SKIP_IP_CHECK=true node scrape_medicine.js --test",
     "scrape:medicine": "node scrape_medicine.js",
-    "scrape:medicine:bg": "mkdir -p logs data && nohup caffeinate -dimsu node scrape_medicine.js > logs/medicine-scrape.log 2>&1 & echo $! > data/medicine-scraper.pid && echo \"medicine.shop バックグラウンド開始 → npm run scrape:medicine:log で確認\"",
+    "scrape:medicine:bg": "mkdir -p logs data && nohup caffeinate -dimsu node scrape_medicine.js > logs/medicine-scrape.log 2>&1 & echo $! > data/medicine-scraper.pid && echo \"medicine.shop バックグラウンド開始 → npm run scrape:medicine:log\"",
     "scrape:medicine:log": "tail -f logs/medicine-scrape.log",
-    "scrape:medicine:stop": "cat data/medicine-scraper.pid 2>/dev/null | xargs kill && echo '停止しました' || echo 'PIDファイルが見つかりません'",
-    "export:medicine": "node export.js --source medicine"
+    "scrape:medicine:stop": "cat data/medicine-scraper.pid 2>/dev/null | xargs kill && echo '停止' || echo 'PIDなし'",
+    "export:medicine": "node export.js --source medicine",
+
+    "db:init": "node db/init.js",
+    "db:sync": "node db-sync.js --detect-changes",
+    "monitor": "node monitor.js",
+    "monitor:7d": "node monitor.js --since 7d",
+    "monitor:notify": "node monitor.js --notify",
+    "monitor:export": "node monitor.js --export",
+
+    "refresh": "node scrape_medicine.js && node db-sync.js --detect-changes && node monitor.js --notify",
+    "refresh:bg": "mkdir -p logs data && nohup caffeinate -dimsu sh -c 'node scrape_medicine.js && node db-sync.js --detect-changes && node monitor.js --notify' > logs/refresh.log 2>&1 & echo $! > data/refresh.pid && echo \"refresh バックグラウンド開始 → tail -f logs/refresh.log\"",
+
+    "count": "node -e \"const fs=require('fs'); for (const f of ['data/medicine-products.json','data/medicine-done-ids.json','data/medicine-missing-ids.json','data/medicine-errors.json','data/products.json']) { if (fs.existsSync(f)) { const d=JSON.parse(fs.readFileSync(f,'utf8')); console.log(f, Array.isArray(d)?d.length:Object.keys(d).length); } }\""
   },
   "dependencies": {
+    "better-sqlite3": "^9.6.0",
     "crawlee": "^3.10.0",
     "dotenv": "^16.4.5",
     "playwright": "1.56.1"
