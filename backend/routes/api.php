@@ -321,4 +321,12 @@ Route::prefix('v1')->group(function () {
         Route::post('orders/{order}/process', [\App\Http\Controllers\Vendor\OrderController::class, 'process']);
         Route::post('orders/{order}/ship', [\App\Http\Controllers\Vendor\OrderController::class, 'ship']);
     });
+
+    // ── Affiliate (Admin) ──────────────────────────────────────────────────
+    Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin/affiliate')->group(function () {
+        Route::get('programs', [\App\Http\Controllers\Admin\AffiliateDashboardController::class, 'index']);
+        Route::get('summary', [\App\Http\Controllers\Admin\AffiliateDashboardController::class, 'summary']);
+        Route::get('conversions', [\App\Http\Controllers\Admin\AffiliateDashboardController::class, 'conversions']);
+        Route::post('conversions/{id}/approve', [\App\Http\Controllers\Admin\AffiliateDashboardController::class, 'approve']);
+    });
 });

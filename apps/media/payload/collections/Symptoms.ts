@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { upsertSymptom } from '../../lib/meilisearch'
 
 export const Symptoms: CollectionConfig = {
   slug: 'symptoms',
@@ -17,6 +18,18 @@ export const Symptoms: CollectionConfig = {
           data.publishedAt = new Date().toISOString()
         }
         return data
+      },
+    ],
+    afterChange: [
+      async ({ doc }) => {
+        await upsertSymptom({
+          id: String(doc.id),
+          slug: doc.slug,
+          nameJa: doc.nameJa,
+          nameEn: doc.nameEn ?? null,
+          descriptionJa: doc.descriptionJa ?? null,
+          isPublished: doc.isPublished ?? false,
+        })
       },
     ],
   },

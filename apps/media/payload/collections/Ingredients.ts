@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { upsertIngredient } from '../../lib/meilisearch'
 
 export const Ingredients: CollectionConfig = {
   slug: 'ingredients',
@@ -17,6 +18,18 @@ export const Ingredients: CollectionConfig = {
           data.publishedAt = new Date().toISOString()
         }
         return data
+      },
+    ],
+    afterChange: [
+      async ({ doc }) => {
+        await upsertIngredient({
+          id: String(doc.id),
+          slug: doc.slug,
+          nameJa: doc.nameJa,
+          nameEn: doc.nameEn ?? null,
+          descriptionJa: doc.descriptionJa ?? null,
+          isPublished: doc.isPublished ?? false,
+        })
       },
     ],
   },
