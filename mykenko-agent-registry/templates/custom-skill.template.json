@@ -1,0 +1,27 @@
+{
+  "name": "mykenko-example-skill",
+  "display_name": "MYKENKO Example Skill",
+  "description": "このSkillが何をするかを1〜2文で書く",
+  "version": "1.0.0",
+  "category": "common",
+  "risk_level": "medium",
+  "entry_point": "SKILL.md",
+  "owner": "take sasa",
+  "tags": ["mykenko", "example"],
+  "inputs": [
+    {
+      "name": "input1",
+      "description": "入力の説明",
+      "required": true,
+      "type": "string"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "output1",
+      "description": "出力の説明",
+      "type": "string"
+    }
+  ],
+  "console_notes": "Console移行時の注意事項を書く"
+}

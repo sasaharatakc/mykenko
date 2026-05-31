@@ -1,0 +1,327 @@
+# local-claude-scan
+# Generated: 2026-05-31 12:46:02
+
+=== Claude環境スキャン ===
+実行日時: 2026-05-31 12:46:02
+
+=== グローバル設定 ===
+~/.claude が存在します
+drwxr-xr-x  8 root root 4096 May 31 12:24 .
+drwx------ 13 root root 4096 May 31 12:23 ..
+-rw-r--r--  1 root root   24 May 31 12:23 .last-cleanup
+drwxr-xr-x  2 root root 4096 May 31 12:23 backups
+-rw-------  1 root root  125 May 31 12:23 policy-limits.json
+drwx------  3 root root 4096 May 31 12:23 projects
+drwxr-xr-x  3 root root 4096 May 31 12:24 session-env
+drwx------  2 root root 4096 May 31 12:23 sessions
+-rw-------  1 root root  442 May 30 12:41 settings.json
+drwxr-xr-x  2 root root 4096 May 31 12:24 shell-snapshots
+drwxr-xr-x  3 root root 4096 May 30 12:41 skills
+-rwxr-xr-x  1 root root 2165 May 30 12:41 stop-hook-git-check.sh
+
+=== グローバル Agents (~/.claude/agents/) ===
+（存在しません）
+
+=== グローバル Skills (~/.claude/skills/) ===
+件数: 1
+~/.claude/skills/session-start-hook/SKILL.md
+
+=== グローバル Commands (~/.claude/commands/) ===
+（存在しません）
+
+=== グローバル設定ファイル ===
+~/.claude/settings.json が存在します
+~/.claude.json が存在します
+  ⚠️  注意: 認証情報と思われるフィールドが含まれています（表示しません）
+
+=== プロジェクト配下 ===
+--- /home/user/mykenko ---
+  Agents: 153 件
+~/mykenko/.claude/agents/academic-paper-agent.md
+~/mykenko/.claude/agents/affiliate-agent.md
+~/mykenko/.claude/agents/ai-engineer.md
+~/mykenko/.claude/agents/ai-overview-seo.md
+~/mykenko/.claude/agents/ai-search-monitor.md
+~/mykenko/.claude/agents/api-engineer.md
+~/mykenko/.claude/agents/architect.md
+~/mykenko/.claude/agents/art-director.md
+~/mykenko/.claude/agents/authority-builder.md
+~/mykenko/.claude/agents/automation-agent.md
+~/mykenko/.claude/agents/automation-engineer.md
+~/mykenko/.claude/agents/backend-engineer.md
+~/mykenko/.claude/agents/banner-designer.md
+~/mykenko/.claude/agents/behavior-analyst.md
+~/mykenko/.claude/agents/brand-agent.md
+~/mykenko/.claude/agents/brand-designer.md
+~/mykenko/.claude/agents/business-analyst.md
+~/mykenko/.claude/agents/ceo-agent.md
+~/mykenko/.claude/agents/cfo-agent.md
+~/mykenko/.claude/agents/chief-of-staff.md
+~/mykenko/.claude/agents/citation-builder.md
+~/mykenko/.claude/agents/cmo-agent.md
+~/mykenko/.claude/agents/code-reviewer.md
+~/mykenko/.claude/agents/community-agent.md
+~/mykenko/.claude/agents/competitor-agent.md
+~/mykenko/.claude/agents/competitor-analyst.md
+~/mykenko/.claude/agents/compliance-checker.md
+~/mykenko/.claude/agents/conversion-agent.md
+~/mykenko/.claude/agents/coo-agent.md
+~/mykenko/.claude/agents/copywriter.md
+~/mykenko/.claude/agents/crawler-agent.md
+~/mykenko/.claude/agents/creative-director.md
+~/mykenko/.claude/agents/crm-agent.md
+~/mykenko/.claude/agents/cross-sell-agent.md
+~/mykenko/.claude/agents/customer-support-agent.md
+~/mykenko/.claude/agents/customer-voice-agent.md
+~/mykenko/.claude/agents/data-analyst.md
+~/mykenko/.claude/agents/data-quality-agent.md
+~/mykenko/.claude/agents/database-agent.md
+~/mykenko/.claude/agents/database-engineer.md
+~/mykenko/.claude/agents/deduplication-agent.md
+~/mykenko/.claude/agents/deployment-agent.md
+~/mykenko/.claude/agents/design-checker.md
+~/mykenko/.claude/agents/devops-engineer.md
+~/mykenko/.claude/agents/doc-writer.md
+~/mykenko/.claude/agents/ecommerce-strategist.md
+~/mykenko/.claude/agents/editor.md
+~/mykenko/.claude/agents/email-marketing-agent.md
+~/mykenko/.claude/agents/email-writer.md
+~/mykenko/.claude/agents/entity-builder.md
+~/mykenko/.claude/agents/entity-seo.md
+~/mykenko/.claude/agents/expansion-agent.md
+~/mykenko/.claude/agents/fact-checker.md
+~/mykenko/.claude/agents/figma-designer.md
+~/mykenko/.claude/agents/financial-analyst.md
+~/mykenko/.claude/agents/firecrawl-agent.md
+~/mykenko/.claude/agents/frontend-engineer.md
+~/mykenko/.claude/agents/gamechanger.md
+~/mykenko/.claude/agents/geo-writer.md
+~/mykenko/.claude/agents/google-ads-agent.md
+~/mykenko/.claude/agents/google-search-agent.md
+~/mykenko/.claude/agents/growth-agent.md
+~/mykenko/.claude/agents/influencer-agent.md
+~/mykenko/.claude/agents/instagram-agent.md
+~/mykenko/.claude/agents/internal-link-seo.md
+~/mykenko/.claude/agents/keyword-agent.md
+~/mykenko/.claude/agents/kingmaker.md
+~/mykenko/.claude/agents/knowledge-graph-agent.md
+~/mykenko/.claude/agents/laravel-engineer.md
+~/mykenko/.claude/agents/linkedin-agent.md
+~/mykenko/.claude/agents/local-seo.md
+~/mykenko/.claude/agents/loop-operator.md
+~/mykenko/.claude/agents/lp-designer.md
+~/mykenko/.claude/agents/ltv-agent.md
+~/mykenko/.claude/agents/market-analyst.md
+~/mykenko/.claude/agents/market-research-agent.md
+~/mykenko/.claude/agents/media-outreach-agent.md
+~/mykenko/.claude/agents/medical-checker.md
+~/mykenko/.claude/agents/medical-writer.md
+~/mykenko/.claude/agents/mention-builder.md
+~/mykenko/.claude/agents/meta-ads-agent.md
+~/mykenko/.claude/agents/ml-engineer.md
+~/mykenko/.claude/agents/mobile-engineer.md
+~/mykenko/.claude/agents/motion-designer.md
+~/mykenko/.claude/agents/neo4j-agent.md
+~/mykenko/.claude/agents/news-agent.md
+~/mykenko/.claude/agents/nextjs-engineer.md
+~/mykenko/.claude/agents/normalizer-agent.md
+~/mykenko/.claude/agents/notification-agent.md
+~/mykenko/.claude/agents/offer-agent.md
+~/mykenko/.claude/agents/offpage-seo.md
+~/mykenko/.claude/agents/onpage-seo.md
+~/mykenko/.claude/agents/order-manager.md
+~/mykenko/.claude/agents/parasite-seo.md
+~/mykenko/.claude/agents/parser-agent.md
+~/mykenko/.claude/agents/partnership-agent.md
+~/mykenko/.claude/agents/patent-agent.md
+~/mykenko/.claude/agents/performance-optimizer.md
+~/mykenko/.claude/agents/pinterest-agent.md
+~/mykenko/.claude/agents/pr-writer.md
+~/mykenko/.claude/agents/press-release-agent.md
+~/mykenko/.claude/agents/pricing-analyst.md
+~/mykenko/.claude/agents/pricing-strategist.md
+~/mykenko/.claude/agents/product-analyst.md
+~/mykenko/.claude/agents/product-strategy-agent.md
+~/mykenko/.claude/agents/programmatic-seo-agent.md
+~/mykenko/.claude/agents/publishing-agent.md
+~/mykenko/.claude/agents/python-engineer.md
+~/mykenko/.claude/agents/qa-engineer.md
+~/mykenko/.claude/agents/qdrant-agent.md
+~/mykenko/.claude/agents/reddit-agent.md
+~/mykenko/.claude/agents/refactor-engineer.md
+~/mykenko/.claude/agents/regulation-agent.md
+~/mykenko/.claude/agents/retention-agent.md
+~/mykenko/.claude/agents/review-analyst.md
+~/mykenko/.claude/agents/review-research-agent.md
+~/mykenko/.claude/agents/risk-checker.md
+~/mykenko/.claude/agents/router.md
+~/mykenko/.claude/agents/sales-planner.md
+~/mykenko/.claude/agents/scheduler-agent.md
+~/mykenko/.claude/agents/schema-seo.md
+~/mykenko/.claude/agents/scraping-agent.md
+~/mykenko/.claude/agents/script-writer.md
+~/mykenko/.claude/agents/security-engineer.md
+~/mykenko/.claude/agents/seo-analyst.md
+~/mykenko/.claude/agents/seo-checker.md
+~/mykenko/.claude/agents/seo-writer.md
+~/mykenko/.claude/agents/sns-research-agent.md
+~/mykenko/.claude/agents/sns-writer.md
+~/mykenko/.claude/agents/system-architect.md
+~/mykenko/.claude/agents/task-agent.md
+~/mykenko/.claude/agents/tdd-guide.md
+~/mykenko/.claude/agents/technical-seo.md
+~/mykenko/.claude/agents/threads-agent.md
+~/mykenko/.claude/agents/tiktok-ads-agent.md
+~/mykenko/.claude/agents/tiktok-agent.md
+~/mykenko/.claude/agents/translator.md
+~/mykenko/.claude/agents/trend-agent.md
+~/mykenko/.claude/agents/trend-analyst.md
+~/mykenko/.claude/agents/typescript-engineer.md
+~/mykenko/.claude/agents/ui-designer.md
+~/mykenko/.claude/agents/upsell-agent.md
+~/mykenko/.claude/agents/ux-checker.md
+~/mykenko/.claude/agents/ux-designer.md
+~/mykenko/.claude/agents/vendor-manager.md
+~/mykenko/.claude/agents/video-designer.md
+~/mykenko/.claude/agents/video-writer.md
+~/mykenko/.claude/agents/workflow-agent.md
+~/mykenko/.claude/agents/x-ads-agent.md
+~/mykenko/.claude/agents/x-agent.md
+~/mykenko/.claude/agents/yahoo-ads-agent.md
+~/mykenko/.claude/agents/youtube-agent.md
+~/mykenko/.claude/agents/youtube-research-agent.md
+  Skills: 63 件
+~/mykenko/.claude/skills/ai/claude-api-usage.md
+~/mykenko/.claude/skills/ai/langgraph-workflow.md
+~/mykenko/.claude/skills/ai/n8n-automation.md
+~/mykenko/.claude/skills/ai/prompt-engineering.md
+~/mykenko/.claude/skills/ai/rag-workflow.md
+~/mykenko/.claude/skills/automation/etl-pipeline.md
+~/mykenko/.claude/skills/automation/playwright-automation.md
+~/mykenko/.claude/skills/automation/webhook-setup.md
+~/mykenko/.claude/skills/code/adr.md
+~/mykenko/.claude/skills/code/api-design.md
+~/mykenko/.claude/skills/code/bug-fix.md
+~/mykenko/.claude/skills/code/deploy-flow.md
+~/mykenko/.claude/skills/code/laravel-patterns.md
+~/mykenko/.claude/skills/code/new-feature.md
+~/mykenko/.claude/skills/code/nextjs-patterns.md
+~/mykenko/.claude/skills/code/refactor-flow.md
+~/mykenko/.claude/skills/code/security-review.md
+~/mykenko/.claude/skills/code/tdd-workflow.md
+~/mykenko/.claude/skills/content/article-writing.md
+~/mykenko/.claude/skills/content/video-script.md
+~/mykenko/.claude/skills/design/design-system.md
+~/mykenko/.claude/skills/design/ux-audit.md
+~/mykenko/.claude/skills/ecommerce/checkout-optimize.md
+~/mykenko/.claude/skills/ecommerce/vendor-onboard.md
+~/mykenko/.claude/skills/geo-llmo/citation-build.md
+~/mykenko/.claude/skills/geo-llmo/entity-extract.md
+~/mykenko/.claude/skills/geo-llmo/geo-audit.md
+~/mykenko/.claude/skills/marketing/campaign-launch.md
+~/mykenko/.claude/skills/marketing/email-flow.md
+~/mykenko/.claude/skills/marketing/meta-ads-flow.md
+~/mykenko/.claude/skills/medical/evidence-search.md
+~/mykenko/.claude/skills/medical/yakki-check.md
+~/mykenko/.claude/skills/medical/ymyl-check.md
+~/mykenko/.claude/skills/research/competitor-analysis.md
+~/mykenko/.claude/skills/research/competitor-deep.md
+~/mykenko/.claude/skills/research/deep-research-flow.md
+~/mykenko/.claude/skills/research/deep-research.md
+~/mykenko/.claude/skills/research/google-search.md
+~/mykenko/.claude/skills/research/reddit-mining.md
+~/mykenko/.claude/skills/research/regulation-research.md
+~/mykenko/.claude/skills/research/serp-deep-analysis.md
+~/mykenko/.claude/skills/research/trend-research.md
+~/mykenko/.claude/skills/router/context-compress.md
+~/mykenko/.claude/skills/router/crew-select.md
+~/mykenko/.claude/skills/router/parallel-run.md
+~/mykenko/.claude/skills/router/priority-sort.md
+~/mykenko/.claude/skills/router/route-task.md
+~/mykenko/.claude/skills/router/status-report.md
+~/mykenko/.claude/skills/router/workflow-gen.md
+~/mykenko/.claude/skills/seo/ai-overview-optimize.md
+~/mykenko/.claude/skills/seo/backlink-strategy.md
+~/mykenko/.claude/skills/seo/competitor-seo.md
+~/mykenko/.claude/skills/seo/content-brief.md
+~/mykenko/.claude/skills/seo/content-optimize.md
+~/mykenko/.claude/skills/seo/internal-link.md
+~/mykenko/.claude/skills/seo/keyword-research.md
+~/mykenko/.claude/skills/seo/meta-gen.md
+~/mykenko/.claude/skills/seo/page-speed.md
+~/mykenko/.claude/skills/seo/programmatic-seo.md
+~/mykenko/.claude/skills/seo/schema-gen.md
+~/mykenko/.claude/skills/seo/seo-audit.md
+~/mykenko/.claude/skills/seo/serp-analysis.md
+~/mykenko/.claude/skills/seo/technical-check.md
+  Commands: 63 件
+~/mykenko/.claude/commands/adr.md
+~/mykenko/.claude/commands/ai-overview-optimize.md
+~/mykenko/.claude/commands/api-design.md
+~/mykenko/.claude/commands/article-writing.md
+~/mykenko/.claude/commands/backlink-strategy.md
+~/mykenko/.claude/commands/bug-fix.md
+~/mykenko/.claude/commands/campaign-launch.md
+~/mykenko/.claude/commands/checkout-optimize.md
+~/mykenko/.claude/commands/citation-build.md
+~/mykenko/.claude/commands/claude-api-usage.md
+~/mykenko/.claude/commands/competitor-analysis.md
+~/mykenko/.claude/commands/competitor-deep.md
+~/mykenko/.claude/commands/competitor-seo.md
+~/mykenko/.claude/commands/content-brief.md
+~/mykenko/.claude/commands/content-optimize.md
+~/mykenko/.claude/commands/context-compress.md
+~/mykenko/.claude/commands/crew-select.md
+~/mykenko/.claude/commands/deep-research-flow.md
+~/mykenko/.claude/commands/deep-research.md
+~/mykenko/.claude/commands/deploy-flow.md
+~/mykenko/.claude/commands/design-system.md
+~/mykenko/.claude/commands/email-flow.md
+~/mykenko/.claude/commands/entity-extract.md
+~/mykenko/.claude/commands/etl-pipeline.md
+~/mykenko/.claude/commands/evidence-search.md
+~/mykenko/.claude/commands/geo-audit.md
+~/mykenko/.claude/commands/google-search.md
+~/mykenko/.claude/commands/internal-link.md
+~/mykenko/.claude/commands/keyword-research.md
+~/mykenko/.claude/commands/langgraph-workflow.md
+~/mykenko/.claude/commands/laravel-patterns.md
+~/mykenko/.claude/commands/meta-ads-flow.md
+~/mykenko/.claude/commands/meta-gen.md
+~/mykenko/.claude/commands/n8n-automation.md
+~/mykenko/.claude/commands/new-feature.md
+~/mykenko/.claude/commands/nextjs-patterns.md
+~/mykenko/.claude/commands/page-speed.md
+~/mykenko/.claude/commands/parallel-run.md
+~/mykenko/.claude/commands/playwright-automation.md
+~/mykenko/.claude/commands/priority-sort.md
+~/mykenko/.claude/commands/programmatic-seo.md
+~/mykenko/.claude/commands/prompt-engineering.md
+~/mykenko/.claude/commands/rag-workflow.md
+~/mykenko/.claude/commands/reddit-mining.md
+~/mykenko/.claude/commands/refactor-flow.md
+~/mykenko/.claude/commands/regulation-research.md
+~/mykenko/.claude/commands/route-task.md
+~/mykenko/.claude/commands/schema-gen.md
+~/mykenko/.claude/commands/security-review.md
+~/mykenko/.claude/commands/seo-audit.md
+~/mykenko/.claude/commands/serp-analysis.md
+~/mykenko/.claude/commands/serp-deep-analysis.md
+~/mykenko/.claude/commands/status-report.md
+~/mykenko/.claude/commands/tdd-workflow.md
+~/mykenko/.claude/commands/technical-check.md
+~/mykenko/.claude/commands/trend-research.md
+~/mykenko/.claude/commands/ux-audit.md
+~/mykenko/.claude/commands/vendor-onboard.md
+~/mykenko/.claude/commands/video-script.md
+~/mykenko/.claude/commands/webhook-setup.md
+~/mykenko/.claude/commands/workflow-gen.md
+~/mykenko/.claude/commands/yakki-check.md
+~/mykenko/.claude/commands/ymyl-check.md
+
+=== スキャンサマリー ===
+総Agent数（推定）: 153
+総Skill数（推定）: 64
+総Command数（推定）: 63
+
+出力ファイル: /home/user/mykenko/mykenko-agent-registry/tmp/local-claude-scan.txt

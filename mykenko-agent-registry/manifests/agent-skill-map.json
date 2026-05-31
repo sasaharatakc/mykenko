@@ -1,0 +1,195 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-05-31",
+  "description": "AgentとSkillの紐づけマップ。Agent実行時に使用するSkillを定義する。",
+  "mappings": [
+    {
+      "agent": "mykenko-executive-director",
+      "skills": ["route-task", "crew-select", "priority-sort", "status-report"],
+      "required": true,
+      "notes": "統括Agent - ルーティング・優先度管理に使用"
+    },
+    {
+      "agent": "mykenko-seo-director",
+      "skills": ["seo-audit", "keyword-research", "content-brief", "serp-analysis", "technical-check"],
+      "required": true,
+      "notes": "SEO戦略統括"
+    },
+    {
+      "agent": "mykenko-geo-llmo-strategist",
+      "skills": ["geo-audit", "entity-extract", "citation-build", "ai-overview-optimize"],
+      "required": true,
+      "notes": "GEO/LLMO最適化"
+    },
+    {
+      "agent": "mykenko-serp-researcher",
+      "skills": ["serp-analysis", "mykenko-serp-analysis", "competitor-seo", "mykenko-competitor-analysis"],
+      "required": false,
+      "notes": "SERP調査 - mykenko専用版と汎用版を使い分け"
+    },
+    {
+      "agent": "mykenko-content-architect",
+      "skills": ["content-brief", "article-writing", "mykenko-internal-link-design", "mykenko-seo-jsonld"],
+      "required": true,
+      "notes": "コンテンツ設計統括"
+    },
+    {
+      "agent": "mykenko-product-page-writer",
+      "skills": [
+        "mykenko-product-page-template",
+        "mykenko-yakuki-check",
+        "mykenko-ymyl-check",
+        "mykenko-seo-jsonld",
+        "mykenko-internal-link-design"
+      ],
+      "required": true,
+      "notes": "商品ページ作成 - 薬機法チェック必須"
+    },
+    {
+      "agent": "mykenko-compliance-reviewer",
+      "skills": [
+        "mykenko-yakuki-check",
+        "mykenko-ymyl-check",
+        "mykenko-keihyo-check",
+        "mykenko-fda-risk-check",
+        "mykenko-stealth-marketing-check",
+        "mykenko-affiliate-policy-check",
+        "evidence-search"
+      ],
+      "required": true,
+      "notes": "全コンプライアンスチェックを束ねる"
+    },
+    {
+      "agent": "mykenko-yakuki-reviewer",
+      "skills": ["mykenko-yakuki-check", "yakki-check", "evidence-search"],
+      "required": true,
+      "notes": "薬機法専門レビュー"
+    },
+    {
+      "agent": "mykenko-ymyl-reviewer",
+      "skills": ["mykenko-ymyl-check", "ymyl-check", "evidence-search"],
+      "required": true,
+      "notes": "YMYL専門レビュー"
+    },
+    {
+      "agent": "mykenko-fda-risk-reviewer",
+      "skills": ["mykenko-fda-risk-check", "evidence-search", "regulation-research"],
+      "required": true,
+      "notes": "FDA規制対応レビュー"
+    },
+    {
+      "agent": "mykenko-keihyo-reviewer",
+      "skills": ["mykenko-keihyo-check", "mykenko-stealth-marketing-check", "regulation-research"],
+      "required": true,
+      "notes": "景品表示法・ステルスマーケティング対応"
+    },
+    {
+      "agent": "mykenko-sns-localizer",
+      "skills": ["mykenko-sns-japanese-localization"],
+      "required": true,
+      "notes": "SNS日本語化・ローカライゼーション"
+    },
+    {
+      "agent": "mykenko-ads-lp-planner",
+      "skills": ["mykenko-ad-lp-template", "mykenko-keihyo-check", "campaign-launch"],
+      "required": true,
+      "notes": "広告LP企画 - 景表法チェック必須"
+    },
+    {
+      "agent": "mykenko-price-monitor-agent",
+      "skills": ["mykenko-price-extraction"],
+      "required": true,
+      "notes": "価格監視・競合価格追跡"
+    },
+    {
+      "agent": "mykenko-product-db-builder",
+      "skills": ["mykenko-product-normalization", "etl-pipeline"],
+      "required": true,
+      "notes": "商品DB構築・正規化"
+    },
+    {
+      "agent": "mykenko-ingredient-db-builder",
+      "skills": ["mykenko-ingredient-normalization", "mykenko-ingredient-page-template", "evidence-search"],
+      "required": true,
+      "notes": "成分DB構築 - エビデンス確認必須"
+    },
+    {
+      "agent": "mykenko-affiliate-manager",
+      "skills": ["mykenko-affiliate-policy-check", "mykenko-keihyo-check"],
+      "required": true,
+      "notes": "アフィリエイト管理 - ポリシー・景表法チェック必須"
+    },
+    {
+      "agent": "mykenko-agency-manager",
+      "skills": ["status-report", "priority-sort"],
+      "required": false,
+      "notes": "代理店管理"
+    },
+    {
+      "agent": "mykenko-sales-agent",
+      "skills": ["status-report"],
+      "required": false,
+      "notes": "営業支援"
+    },
+    {
+      "agent": "mykenko-crm-agent",
+      "skills": ["email-flow", "status-report"],
+      "required": false,
+      "notes": "CRM・リテンション管理"
+    },
+    {
+      "agent": "mykenko-dev-architect",
+      "skills": ["adr", "api-design", "laravel-patterns", "nextjs-patterns"],
+      "required": true,
+      "notes": "MYKENKO開発設計 - Laravel + Next.js"
+    },
+    {
+      "agent": "mykenko-dev-reviewer",
+      "skills": ["security-review", "tdd-workflow", "refactor-flow"],
+      "required": true,
+      "notes": "コードレビュー"
+    },
+    {
+      "agent": "mykenko-design-auditor",
+      "skills": ["ux-audit", "design-system"],
+      "required": true,
+      "notes": "デザイン監査"
+    },
+    {
+      "agent": "mykenko-github-ops-agent",
+      "skills": ["deploy-flow", "status-report"],
+      "required": true,
+      "notes": "GitHub操作 - デプロイフロー管理"
+    },
+    {
+      "agent": "compliance-checker",
+      "skills": ["yakki-check", "ymyl-check", "regulation-research"],
+      "required": false,
+      "notes": "汎用コンプライアンスチェッカー"
+    },
+    {
+      "agent": "medical-checker",
+      "skills": ["yakki-check", "ymyl-check", "evidence-search"],
+      "required": false,
+      "notes": "医療・健康コンテンツチェック"
+    },
+    {
+      "agent": "seo-writer",
+      "skills": ["content-brief", "keyword-research", "meta-gen", "schema-gen"],
+      "required": false,
+      "notes": "SEO記事執筆"
+    },
+    {
+      "agent": "technical-seo",
+      "skills": ["technical-check", "page-speed", "schema-gen"],
+      "required": false,
+      "notes": "テクニカルSEO"
+    },
+    {
+      "agent": "router",
+      "skills": ["route-task", "crew-select", "parallel-run", "priority-sort", "workflow-gen"],
+      "required": true,
+      "notes": "タスクルーティング統括"
+    }
+  ]
+}
