@@ -1,0 +1,41 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-05-31",
+  "description": "Claude Console（Managed Agents・Custom Skills Library）への移行状態を管理する台帳。アップロード後に必ず更新すること。",
+  "managed_agents": [
+    {"local_name": "mykenko-executive-director", "console_agent_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "移行優先度: 高"},
+    {"local_name": "mykenko-yakuki-reviewer", "console_agent_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "移行優先度: 最高 - コンプライアンス必須"},
+    {"local_name": "mykenko-ymyl-reviewer", "console_agent_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "移行優先度: 最高"},
+    {"local_name": "mykenko-keihyo-reviewer", "console_agent_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "移行優先度: 最高"},
+    {"local_name": "mykenko-compliance-reviewer", "console_agent_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "移行優先度: 最高"},
+    {"local_name": "mykenko-product-page-writer", "console_agent_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "移行優先度: 高"},
+    {"local_name": "mykenko-seo-director", "console_agent_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "移行優先度: 高"},
+    {"local_name": "mykenko-fda-risk-reviewer", "console_agent_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "米国向け展開時に移行"},
+    {"local_name": "mykenko-dev-architect", "console_agent_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "移行優先度: 中"},
+    {"local_name": "mykenko-github-ops-agent", "console_agent_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "移行優先度: 中"},
+    {"local_name": "mykenko-serp-researcher", "console_agent_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "移行優先度: 中"}
+  ],
+  "custom_skills": [
+    {"local_name": "mykenko-yakuki-check", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "最優先 - draft完成後すぐ移行"},
+    {"local_name": "mykenko-ymyl-check", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "最優先"},
+    {"local_name": "mykenko-keihyo-check", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "最優先"},
+    {"local_name": "mykenko-fda-risk-check", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "最優先"},
+    {"local_name": "mykenko-stealth-marketing-check", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "最優先"},
+    {"local_name": "mykenko-product-page-template", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "高優先度"},
+    {"local_name": "mykenko-seo-jsonld", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "高優先度"},
+    {"local_name": "mykenko-serp-analysis", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "高優先度"},
+    {"local_name": "mykenko-price-extraction", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "中優先度"},
+    {"local_name": "mykenko-product-normalization", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "中優先度"},
+    {"local_name": "mykenko-ingredient-normalization", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "中優先度"},
+    {"local_name": "mykenko-sns-japanese-localization", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "中優先度"},
+    {"local_name": "mykenko-ad-lp-template", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "中優先度"},
+    {"local_name": "mykenko-affiliate-policy-check", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "中優先度"},
+    {"local_name": "mykenko-agent-review", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "中優先度"},
+    {"local_name": "yakki-check", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "既存Skill - mykenko-yakuki-checkの前提"},
+    {"local_name": "ymyl-check", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "既存Skill"},
+    {"local_name": "laravel-patterns", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "MYKENKOバックエンド開発に必須"},
+    {"local_name": "nextjs-patterns", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "MYKENKOフロントエンド開発に必須"},
+    {"local_name": "checkout-optimize", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "MYKENKO EC機能"},
+    {"local_name": "vendor-onboard", "console_skill_id": "", "console_version": "", "status": "not_uploaded", "last_synced_at": "", "notes": "MYKENKOベンダー管理"}
+  ]
+}

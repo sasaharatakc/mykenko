@@ -1,0 +1,84 @@
+{
+  "version": "1.0.0",
+  "created_at": "2026-05-31",
+  "phases": [
+    {
+      "phase": 1,
+      "name": "MYKENKO専用Skill 初期ドラフト作成",
+      "status": "in_progress",
+      "target_date": "2026-06-15",
+      "tasks": [
+        {"task": "mykenko-yakuki-check SKILL.md 作成", "status": "pending"},
+        {"task": "mykenko-ymyl-check SKILL.md 作成", "status": "pending"},
+        {"task": "mykenko-keihyo-check SKILL.md 作成", "status": "pending"},
+        {"task": "mykenko-fda-risk-check SKILL.md 作成", "status": "pending"},
+        {"task": "mykenko-stealth-marketing-check SKILL.md 作成", "status": "pending"},
+        {"task": "mykenko-product-page-template SKILL.md 作成", "status": "pending"},
+        {"task": "mykenko-seo-jsonld SKILL.md 作成", "status": "pending"}
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "MYKENKO専用Agent 初期ドラフト作成",
+      "status": "pending",
+      "target_date": "2026-06-30",
+      "tasks": [
+        {"task": "mykenko-yakuki-reviewer.md 作成", "status": "pending"},
+        {"task": "mykenko-ymyl-reviewer.md 作成", "status": "pending"},
+        {"task": "mykenko-keihyo-reviewer.md 作成", "status": "pending"},
+        {"task": "mykenko-compliance-reviewer.md 作成", "status": "pending"},
+        {"task": "mykenko-product-page-writer.md 作成", "status": "pending"},
+        {"task": "mykenko-seo-director.md 作成", "status": "pending"},
+        {"task": "mykenko-executive-director.md 作成", "status": "pending"}
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Claude Codeへのテスト反映",
+      "status": "pending",
+      "target_date": "2026-07-15",
+      "tasks": [
+        {"task": "scripts/copy-to-claude-code.sh の動作確認", "status": "pending"},
+        {"task": "Phase 2のAgentをClaude Codeで動作テスト", "status": "pending"},
+        {"task": "Phase 1のSkillをClaude Codeで動作テスト", "status": "pending"},
+        {"task": "agent-skill-map.json の参照整合性確認", "status": "pending"}
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "Skill レビュー・承認",
+      "status": "pending",
+      "target_date": "2026-07-31",
+      "tasks": [
+        {"task": "コンプライアンス系Skillのレビュー（医療専門家確認）", "status": "pending"},
+        {"task": "status を approved に変更", "status": "pending"},
+        {"task": "version を 1.0.0 に更新", "status": "pending"}
+      ]
+    },
+    {
+      "phase": 5,
+      "name": "Console Custom Skills Library への移行",
+      "status": "pending",
+      "target_date": "2026-08-15",
+      "tasks": [
+        {"task": "python3 scripts/package-skills.py 実行", "status": "pending"},
+        {"task": "mykenko-yakuki-check アップロード", "status": "pending"},
+        {"task": "mykenko-ymyl-check アップロード", "status": "pending"},
+        {"task": "mykenko-keihyo-check アップロード", "status": "pending"},
+        {"task": "console-map.json 更新", "status": "pending"}
+      ]
+    },
+    {
+      "phase": 6,
+      "name": "Console Managed Agents への移行",
+      "status": "pending",
+      "target_date": "2026-08-31",
+      "tasks": [
+        {"task": "mykenko-compliance-reviewer Managed Agentとして登録", "status": "pending"},
+        {"task": "mykenko-product-page-writer Managed Agentとして登録", "status": "pending"},
+        {"task": "mykenko-seo-director Managed Agentとして登録", "status": "pending"},
+        {"task": "console-map.json 更新（console_agent_id記録）", "status": "pending"}
+      ]
+    }
+  ]
+}

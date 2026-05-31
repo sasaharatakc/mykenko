@@ -1,0 +1,19 @@
+{
+  "name": "mykenko-example-agent",
+  "description": "このAgentが何をするかを1〜2文で書く",
+  "system_prompt": "あなたは〇〇の専門家です。...",
+  "model": "claude-sonnet-4-6",
+  "skills": [
+    "mykenko-example-skill"
+  ],
+  "tools": [
+    "read_file",
+    "web_search"
+  ],
+  "version": "1.0.0",
+  "category": "common",
+  "risk_level": "medium",
+  "owner": "take sasa",
+  "tags": ["mykenko", "example"],
+  "console_notes": "Console移行時の注意事項を書く"
+}

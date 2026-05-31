@@ -1,0 +1,66 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-05-31",
+  "description": "機能重複が疑われるAgent・Skill・Commandの一覧。統合・廃止の検討に使用。",
+  "duplicate_skills": [
+    {
+      "group": "deep-research重複グループ",
+      "items": ["deep-research", "deep-research-flow"],
+      "action": "統合検討",
+      "recommendation": "deep-research-flow を主Skillとして残し、deep-research は廃止またはエイリアスとして扱う",
+      "priority": "low"
+    },
+    {
+      "group": "competitor-analysis重複グループ",
+      "items": ["competitor-analysis", "competitor-deep"],
+      "action": "統合検討",
+      "recommendation": "competitor-deep を competitor-analysis の「詳細モード」として統合を検討",
+      "priority": "low"
+    },
+    {
+      "group": "serp-analysis重複グループ",
+      "items": ["serp-analysis", "serp-deep-analysis"],
+      "action": "統合検討",
+      "recommendation": "serp-deep-analysis を serp-analysis の深掘りバリアントとして整理",
+      "priority": "low"
+    },
+    {
+      "group": "yakuki-check重複グループ",
+      "items": ["yakki-check", "mykenko-yakuki-check"],
+      "action": "差別化",
+      "recommendation": "yakki-check は汎用（common）、mykenko-yakuki-checkはMYKENKO専用の詳細版として使い分け。重複ではなく階層関係として整理",
+      "priority": "medium"
+    },
+    {
+      "group": "ymyl-check重複グループ",
+      "items": ["ymyl-check", "mykenko-ymyl-check"],
+      "action": "差別化",
+      "recommendation": "yakki-checkと同様の階層関係として整理",
+      "priority": "medium"
+    }
+  ],
+  "duplicate_commands": [
+    {
+      "group": "deep-research重複コマンド",
+      "items": ["deep-research", "deep-research-flow"],
+      "action": "統合検討",
+      "recommendation": "deep-research-flowに統一し、deep-researchはdeprecated",
+      "priority": "low"
+    },
+    {
+      "group": "competitor重複コマンド",
+      "items": ["competitor-analysis", "competitor-deep"],
+      "action": "統合検討",
+      "recommendation": "引数で深度を指定できるよう統合を検討",
+      "priority": "low"
+    },
+    {
+      "group": "serp重複コマンド",
+      "items": ["serp-analysis", "serp-deep-analysis"],
+      "action": "統合検討",
+      "recommendation": "serp-analysisに統合し、--deepフラグで深度切替",
+      "priority": "low"
+    }
+  ],
+  "duplicate_agents": []
+}

@@ -1,0 +1,53 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-05-31",
+  "description": "risk_level: high または critical のAgent・Skillの一覧。定期的なセキュリティレビューに使用。",
+  "summary": {
+    "critical": 0,
+    "high": 18,
+    "medium": 89,
+    "low": 70
+  },
+  "high_risk_agents": [
+    {"name": "medical-checker", "reason": "医療・健康コンテンツの判断を含む"},
+    {"name": "medical-writer", "reason": "医療コンテンツ執筆 - 薬機法注意"},
+    {"name": "scraping-agent", "reason": "外部サイトへのスクレイピング - 利用規約・legal risk"},
+    {"name": "firecrawl-agent", "reason": "大量Webクローリング - rate limit・legal risk"},
+    {"name": "crawler-agent", "reason": "Webクローリング - rate limit・legal risk"},
+    {"name": "security-engineer", "reason": "セキュリティ実装 - 脆弱性情報を扱う"},
+    {"name": "devops-engineer", "reason": "インフラ操作 - 本番環境への影響可能性"},
+    {"name": "deployment-agent", "reason": "本番デプロイ - 破壊的操作の可能性"},
+    {"name": "mykenko-compliance-reviewer", "reason": "法規制判断 - 専門家確認必須"},
+    {"name": "mykenko-yakuki-reviewer", "reason": "薬機法判断 - 法的リスク"},
+    {"name": "mykenko-ymyl-reviewer", "reason": "YMYL判断 - 医療・健康情報"},
+    {"name": "mykenko-fda-risk-reviewer", "reason": "FDA規制判断 - 米国法的リスク"},
+    {"name": "mykenko-keihyo-reviewer", "reason": "景表法判断 - 法的リスク"},
+    {"name": "mykenko-price-monitor-agent", "reason": "競合価格スクレイピング - 利用規約・legal risk"},
+    {"name": "mykenko-product-db-builder", "reason": "大量データ処理 - スクレイピング含む"},
+    {"name": "mykenko-ingredient-db-builder", "reason": "成分情報 - 医療・健康情報 - YMYL注意"},
+    {"name": "mykenko-github-ops-agent", "reason": "Git操作 - push・merge等の破壊的操作"},
+    {"name": "mykenko-affiliate-manager", "reason": "アフィリエイト管理 - 景表法・ステルスマーケティング注意"}
+  ],
+  "high_risk_skills": [
+    {"name": "yakki-check", "reason": "薬機法チェック - 法的判断"},
+    {"name": "ymyl-check", "reason": "YMYL判断 - 医療・健康情報"},
+    {"name": "evidence-search", "reason": "医療エビデンス - 情報の正確性が重要"},
+    {"name": "deploy-flow", "reason": "本番デプロイ"},
+    {"name": "security-review", "reason": "セキュリティ脆弱性情報"},
+    {"name": "mykenko-yakuki-check", "reason": "薬機法チェック - 法的判断"},
+    {"name": "mykenko-ymyl-check", "reason": "YMYL判断"},
+    {"name": "mykenko-fda-risk-check", "reason": "FDA規制 - 米国法的リスク"},
+    {"name": "mykenko-keihyo-check", "reason": "景表法 - 法的判断"},
+    {"name": "mykenko-stealth-marketing-check", "reason": "ステルスマーケティング規制"},
+    {"name": "mykenko-price-extraction", "reason": "競合サイトスクレイピング"},
+    {"name": "mykenko-ingredient-page-template", "reason": "成分情報 - 医療情報含む"},
+    {"name": "mykenko-symptom-page-template", "reason": "症状情報 - YMYL"},
+    {"name": "mykenko-affiliate-policy-check", "reason": "アフィリエイト規制 - 景表法"}
+  ],
+  "review_schedule": {
+    "critical": "変更のたびに必須",
+    "high": "月次レビュー",
+    "medium": "四半期レビュー",
+    "low": "半年ごとレビュー"
+  }
+}
