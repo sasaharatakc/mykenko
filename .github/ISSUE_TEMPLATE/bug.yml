@@ -1,0 +1,65 @@
+name: "🐛 Bug"
+description: 不具合・エラーの報告
+title: "[Bug] "
+labels: ["type:bug", "status:todo"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 何が起きているか
+      description: 発生している問題を具体的に説明してください
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待する動作
+      description: 本来どう動くべきですか？
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 再現手順
+      placeholder: |
+        1. ○○ページへ移動
+        2. ○○をクリック
+        3. エラーが発生
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 優先度
+      options:
+        - "S — 本番停止・決済エラー・データ損失"
+        - "A — 主要機能が使えない"
+        - "B — 一部機能に影響"
+        - "C — 軽微な表示崩れ等"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: 対象エリア
+      options:
+        - media
+        - shop
+        - ai
+        - price-monitor
+        - admin
+        - infra
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: エラーログ・スクリーンショット
+      description: コンソールエラー、スタックトレース、画像など
+    validations:
+      required: false
