@@ -5,6 +5,7 @@
   "description": "Shared TypeScript / ESLint / Tailwind configuration",
   "exports": {
     "./tsconfig.base.json": "./tsconfig.base.json",
+    "./tsconfig.json": "./tsconfig.json",
     "./tailwind": "./tailwind.preset.js",
     "./eslint": "./eslint.config.js"
   },

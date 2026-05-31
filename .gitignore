@@ -37,6 +37,9 @@ Thumbs.db
 # Turbo
 .turbo/
 
+# TypeScript incremental build
+*.tsbuildinfo
+
 # Payload CMS
 payload-types.ts
 

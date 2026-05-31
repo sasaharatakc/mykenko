@@ -135,7 +135,7 @@ export default async function IngredientPage({ params }: { params: { slug: strin
     name: ingredient.nameJa,
     description: ingredient.descriptionJa ?? '',
     slug: ingredient.slug,
-    safetyNotes: ingredient.safetyNotes ?? undefined,
+    ...(ingredient.safetyNotes ? { safetyNotes: ingredient.safetyNotes } : {}),
   })
 
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([

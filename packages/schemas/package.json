@@ -12,6 +12,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@mykenko/config": "workspace:*",
     "typescript": "^5.4.5"
   }
 }

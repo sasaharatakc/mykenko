@@ -1,0 +1,7 @@
+node_modules/
+data/*.json
+data/*.csv
+data/scraper.pid
+logs/
+storage/
+.env
