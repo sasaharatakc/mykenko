@@ -9,6 +9,8 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Request;
+use App\Models\Order;
+use App\Observers\OrderObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        Order::observe(OrderObserver::class);
         // Prevent lazy loading in local to catch N+1 queries early
         Model::preventLazyLoading(app()->isLocal());
 
