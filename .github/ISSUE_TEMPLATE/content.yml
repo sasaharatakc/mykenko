@@ -1,0 +1,64 @@
+name: "📝 Content"
+description: 記事・商品説明・LP・コピーライティング
+title: "[Content] "
+labels: ["type:content", "status:todo"]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: コンテンツの目的
+      description: 誰に向けて何を伝えますか？
+    validations:
+      required: true
+
+  - type: dropdown
+    id: content_type
+    attributes:
+      label: コンテンツ種別
+      options:
+        - 記事（SEO）
+        - 商品ページ
+        - LP
+        - FAQ
+        - 症状ページ
+        - 成分ページ
+        - メールマガジン
+        - SNS投稿
+        - その他
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 優先度
+      options:
+        - "S"
+        - "A"
+        - "B"
+        - "C"
+    validations:
+      required: true
+
+  - type: textarea
+    id: target_kw
+    attributes:
+      label: 対象キーワード（SEO記事の場合）
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: compliance
+    attributes:
+      label: 薬機法・YMYL確認
+      options:
+        - label: 医療効果を断定していない
+        - label: 「治る」「効く」「必ず痩せる」を使っていない
+        - label: 比較・相談導線になっている
+
+  - type: textarea
+    id: done
+    attributes:
+      label: 完了条件
+    validations:
+      required: true
