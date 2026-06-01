@@ -23,6 +23,12 @@
     "scrape:medicine:stop": "cat data/medicine-scraper.pid 2>/dev/null | xargs kill && echo '停止' || echo 'PIDなし'",
     "export:medicine": "node export.js --source medicine",
 
+    "urls:osakadou": "node src/crawlers/osakadou.js",
+    "test:osakadou": "node scrape_osakadou.js --test",
+    "scrape:osakadou": "node scrape_osakadou.js",
+    "scrape:osakadou:url": "node scrape_osakadou.js --url",
+    "export:osakadou": "node export.js --source osakadou",
+
     "db:init": "node db/init.js",
     "db:sync": "node db-sync.js --detect-changes",
     "monitor": "node monitor.js",
