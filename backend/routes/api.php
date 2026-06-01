@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\FlashSaleController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\NewsletterController;
+use App\Http\Controllers\Api\IngredientLinkController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -44,6 +45,8 @@ Route::prefix('v1')->group(function () {
         Route::get('best-sellers', [ProductController::class, 'bestSellers']);
         Route::get('{slug}', [ProductController::class, 'show'])->name('api.products.show');
         Route::get('{slug}/related', [ProductController::class, 'related']);
+        // ── MYKENKO 拡張: 成分 → mykenko.jp 成分ページへのクロスリンク ──
+        Route::get('{slug}/ingredient-links', [IngredientLinkController::class, 'forProduct']);
     });
 
     // ── Categories ────────────────────────────────────────────────────────
