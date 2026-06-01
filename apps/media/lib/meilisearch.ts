@@ -1,5 +1,5 @@
 const MEILI_HOST = process.env.MEILISEARCH_HOST ?? 'http://localhost:7700'
-const MEILI_KEY = process.env.MEILISEARCH_KEY ?? ''
+const MEILI_KEY = process.env.MEILISEARCH_API_KEY ?? ''
 
 async function meiliRequest(
   method: string,
