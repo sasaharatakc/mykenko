@@ -1,0 +1,161 @@
+# ================================================================
+# mykenko-price-monitor リポジトリ用 GitHub Actions ワークフロー
+#
+# このファイルを mykenko-price-monitor の
+#   .github/workflows/price-alert-to-github-issue.yml
+# にコピーして使用してください。
+#
+# 必要な Secrets (mykenko-price-monitor の Settings > Secrets):
+#   DATABASE_URL           : PostgreSQL 接続URL
+#   MYKENKO_GITHUB_TOKEN   : mykenko リポジトリへの Issues Write PAT
+#     作成: Settings > Developer settings > Fine-grained tokens
+#           Repository: sasaharatakc/mykenko
+#           Permission: Issues = Read/Write
+#
+# Issue #26: 価格監視CrewをGitHub Issue自動作成に接続する
+# ================================================================
+
+name: Price Alert → GitHub Issue
+
+on:
+  schedule:
+    - cron: '0 20 * * *'   # 毎朝 JST 05:00 (= UTC 20:00 前日)
+
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (Issue作成しない)'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
+
+jobs:
+  monitor-and-alert:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - run: npm ci
+
+      # ────────────────────────────────────────────────────────────
+      # 1. 価格クローラー実行
+      #    出力: price-changes.json
+      #    形式: Array<{
+      #      competitor: string   // 競合サイト名
+      #      product:    string   // 商品名
+      #      oldPrice:   number   // 変動前価格（円）
+      #      newPrice:   number   // 変動後価格（円）
+      #      changePercent: number // 変動率（負=値下げ）
+      #      url:        string   // 商品URL
+      #    }>
+      # ────────────────────────────────────────────────────────────
+      - name: Run price crawler
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PLAYWRIGHT_HEADLESS: 'true'
+        run: npm run crawl -- --output=price-changes.json
+        continue-on-error: true
+
+      # ────────────────────────────────────────────────────────────
+      # 2. 変動を mykenko リポジトリに Issue として起票
+      #    閾値: ±5% 以上の変動のみ
+      #    ±10% 以上 → priority:A / それ未満 → priority:B
+      # ────────────────────────────────────────────────────────────
+      - name: Create Issues for price changes
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.MYKENKO_GITHUB_TOKEN }}
+          TARGET_REPO: sasaharatakc/mykenko
+          THRESHOLD: '5'
+        run: |
+          node -e "
+          const fs = require('fs'), https = require('https');
+          if (!fs.existsSync('price-changes.json')) { console.log('No changes file'); process.exit(0); }
+          const changes = JSON.parse(fs.readFileSync('price-changes.json', 'utf-8'));
+          const threshold = parseFloat(process.env.THRESHOLD);
+          const repo = process.env.TARGET_REPO;
+          const today = new Date().toISOString().slice(0,10);
+          let created = 0;
+
+          function post(data) {
+            return new Promise((res, rej) => {
+              const body = JSON.stringify(data);
+              const req = https.request({
+                hostname: 'api.github.com',
+                path: '/repos/' + repo + '/issues',
+                method: 'POST',
+                headers: {
+                  Authorization: 'Bearer ' + process.env.GH_TOKEN,
+                  'Content-Type': 'application/json',
+                  'User-Agent': 'mykenko-price-monitor',
+                  'Content-Length': Buffer.byteLength(body),
+                },
+              }, r => { let d=''; r.on('data',c=>d+=c); r.on('end',()=>res(JSON.parse(d))); });
+              req.on('error', rej);
+              req.write(body);
+              req.end();
+            });
+          }
+
+          (async () => {
+            for (const c of changes) {
+              if (Math.abs(c.changePercent) < threshold) continue;
+              const dir = c.changePercent < 0 ? '値下げ' : '値上げ';
+              const e   = c.changePercent < 0 ? '📉' : '📈';
+              const pri = Math.abs(c.changePercent) >= 10 ? 'priority:A' : 'priority:B';
+              const sign = c.changePercent > 0 ? '+' : '';
+              const r = await post({
+                title: '[PriceAlert] ' + c.competitor + ': ' + c.product + ' が ' + sign + c.changePercent + '% ' + dir + ' (' + today + ')',
+                body: [
+                  '## 価格変動検知 ' + e, '',
+                  '| 項目 | 内容 |', '|------|------|',
+                  '| 競合 | ' + c.competitor + ' |',
+                  '| 商品 | ' + c.product + ' |',
+                  '| 変動前 | ¥' + c.oldPrice.toLocaleString() + ' |',
+                  '| 変動後 | ¥' + c.newPrice.toLocaleString() + ' |',
+                  '| 変動率 | ' + sign + c.changePercent + '% ' + e + ' |',
+                  '| URL | ' + c.url + ' |',
+                  '| 検知 | ' + new Date().toISOString() + ' |', '',
+                  '## 対応方針',
+                  '- [ ] 価格変動の事実確認',
+                  '- [ ] 自社価格の見直しを検討',
+                  '- [ ] 必要なら緊急対応', '',
+                  '_自動生成 by mykenko-price-monitor_',
+                ].join('\n'),
+                labels: ['type:research', pri, 'status:todo', 'area:price-monitor'],
+              });
+              if (r.number) { console.log('Created #' + r.number + ': ' + r.title); created++; }
+              await new Promise(r => setTimeout(r, 1000)); // rate limit
+            }
+            console.log('Done: ' + created + '/' + changes.length + ' issues created.');
+          })();
+          "
+
+      # ────────────────────────────────────────────────────────────
+      # 3. Dry run: ログ表示のみ
+      # ────────────────────────────────────────────────────────────
+      - name: Dry run — preview changes
+        if: ${{ github.event.inputs.dry_run == 'true' }}
+        run: |
+          [ -f price-changes.json ] \
+            && node -e "const d=JSON.parse(require('fs').readFileSync('price-changes.json','utf-8'));d.forEach(c=>console.log(c.competitor,c.product,(c.changePercent>0?'+':'')+c.changePercent+'%'));console.log('Total:',d.length);" \
+            || echo "No price-changes.json found."
+
+      # ────────────────────────────────────────────────────────────
+      # 4. 結果アーティファクト保存（7日間）
+      # ────────────────────────────────────────────────────────────
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: price-changes-${{ github.run_id }}
+          path: price-changes.json
+          if-no-files-found: ignore
+          retention-days: 7
