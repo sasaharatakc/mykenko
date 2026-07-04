@@ -9,6 +9,7 @@ MYKENKOのSEO・GEO戦略ドキュメント。
 | `v2_06_INTERNAL_LINK.md` | 内部リンク戦略・自動化 |
 | `v2_07_CATEGORY_MASTER.md` | カテゴリマスタ・L1/L2/L3階層 |
 | `v2_10_AI_GEO_DESIGN.md` | GEO（Generative Engine Optimization）戦略 |
+| `medicine-shop-audit-2026-07-04.md` | medicine.shop SEO監査レポート（ドメイン不整合の指摘含む） |
 
 ## GEO対応クローラー
 
