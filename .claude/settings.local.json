@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(mkdir -p /home/user/mykenko/.claude/agents \\\\ *)"
+      "Bash(mkdir -p /home/user/mykenko/.claude/agents \\\\ *)",
+      "mcp__Claude_Code_Remote__send_later",
+      "mcp__Claude_Code_Remote__list_triggers",
+      "mcp__Claude_Code_Remote__delete_trigger"
     ]
   }
 }
