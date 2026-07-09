@@ -7,8 +7,8 @@
 - 広範囲のコード検索は Explore サブエージェント（読み取り専用）に任せ、本会話にはファイル本体ではなく結論だけを持ち帰る。
 - ファイルは全文Readせず、必要な範囲を `offset`/`limit` や Grep で絞って読む。
 - 同一情報を出力に繰り返さない。最終報告は「変更ファイル・検証結果・リスク・次のアクション」のみ。中間の経過説明は最小限。
-- 読み込み順: `docs/CODEBASE_MAP.md`（コードに触る前に必ず）→ `docs/ai-org/AGENT_REGISTRY.md`（**サブエージェント起動時だけ**。coreから選び、optionalは必要時のみ）。全体像の `docs/ai-org/ORGANIZATION.md` は組織再設計時のみ。
-- エージェントの追加・削除・復帰は `docs/ai-org/AGENT_POLICY.md` に従う。**似たエージェントの新規作成は禁止**（既存を更新）。追加時は AGENT_REGISTRY.md 更新必須（検証: `python3 tools/ai/validate-agent-registry.py`）。
+- 読み込み順: `docs/CODEBASE_MAP.md`（コードに触る前に必ず）→ `docs/ai-org/AGENT_REGISTRY.md`（**エージェント起動・再設計時だけ**。coreから選び、optionalは必要時のみ）→ `docs/ai-org/COMMAND_REGISTRY.md`（**コマンド追加・再設計時だけ**。通常の実行は自動認識される）。全体像の `docs/ai-org/ORGANIZATION.md` は組織再設計時のみ。
+- エージェント・コマンドの追加・削除・復帰は `docs/ai-org/AGENT_POLICY.md`・`docs/ai-org/COMMAND_POLICY.md` に従う。**似たエージェント/コマンドの新規作成は禁止**（既存を更新）。追加時は各 REGISTRY 更新必須（検証: `bash tools/validate_all.sh`）。
 
 ## 常に守るルール
 - ユーザー向けの計画・説明は日本語を使用（コード・英語固有名詞を除く）

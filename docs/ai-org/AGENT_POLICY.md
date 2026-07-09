@@ -35,11 +35,12 @@
 1. `CLAUDE.md` / `AGENTS.md` — 自動読込（これ以上増やさない）
 2. `docs/CODEBASE_MAP.md` — コードに触る前に必ず
 3. `docs/ai-org/AGENT_REGISTRY.md` — **サブエージェントを起動する時だけ**。coreから選び、optionalは必要時のみ
-4. `docs/ai-org/ORGANIZATION.md` — 組織全体の再設計時だけ
+4. `docs/ai-org/COMMAND_REGISTRY.md` — **コマンド追加・整理時だけ**（通常の実行は自動認識される）
+5. `docs/ai-org/ORGANIZATION.md` — 組織全体の再設計時だけ
 
 ## 検証
 ```bash
 python3 tools/ai/validate-agent-registry.py   # 単独実行
-bash tools/validate_all.sh                     # まとめて実行
+bash tools/validate_all.sh                     # agent + command まとめて（--strict）
 ```
-CI追加は任意（現状はWARNING中心・exit 0。`--strict` で警告をエラー化）。
+CI追加は任意（単独実行はWARNING中心・exit 0。`--strict` で警告をエラー化）。
