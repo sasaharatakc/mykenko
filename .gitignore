@@ -48,3 +48,6 @@ postgres_data/
 meili_data/
 qdrant_data/
 n8n_data/
+
+# Claude Code local settings (per-machine)
+.claude/settings.local.json
