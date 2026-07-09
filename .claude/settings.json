@@ -5,6 +5,10 @@
       "Bash(git status)",
       "Bash(git diff*)",
       "Bash(git log*)",
+      "Bash(pnpm lint*)",
+      "Bash(pnpm typecheck*)",
+      "Bash(pnpm test*)",
+      "Bash(pnpm build*)",
       "Bash(npm run lint*)",
       "Bash(npm run build*)",
       "Bash(npm test*)",
@@ -14,27 +18,17 @@
       "Bash(ls *)",
       "Bash(cat *)",
       "Bash(grep *)",
+      "Bash(rg *)",
       "Bash(wc *)",
       "Read",
+      "Grep",
+      "Glob",
       "Skill"
     ],
     "deny": [
       "Bash(rm -rf *)",
       "Bash(git push --force*)",
       "Bash(curl * | bash*)"
-    ]
-  },
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo '[Hermes] ファイル変更を記録: ' && git diff --name-only 2>/dev/null || true"
-          }
-        ]
-      }
     ]
   }
 }
