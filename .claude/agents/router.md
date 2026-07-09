@@ -18,7 +18,7 @@ model: sonnet
 ## Crew一覧
 | Crew | 担当領域 | 主要Agent |
 |------|---------|---------|
-| Strategy Crew | 戦略・意思決定 | kingmaker, gamechanger, ceo-agent |
+| Strategy Crew | 戦略・意思決定 | kingmaker, gamechanger, product-strategy-agent |
 | Development Crew | 開発・実装 | nextjs-engineer, laravel-engineer, api-engineer |
 | Quality Crew | 品質・テスト | qa-engineer, code-reviewer, security-engineer |
 | Ecommerce Crew | EC・販売 | ecommerce-strategist, conversion-agent, vendor-manager |

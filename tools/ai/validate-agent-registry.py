@@ -8,6 +8,7 @@ WARNING中心（exit 0）。--strict で警告があれば exit 1。
   - AGENT_REGISTRY.md に未登録のエージェント / 実体のない登録
   - 類似名エージェント（片方がもう片方を包含する名前）
   - core 指定が多すぎる場合（>15）
+  - 現役エージェントの body が退避済み(archive-candidate)エージェントを参照していないか
 依存: 標準ライブラリのみ。
 """
 import argparse
@@ -113,6 +114,21 @@ def main() -> int:
                 role_a == role_b or {role_a, role_b} == {"agent", "engineer"}
             ):
                 warn(f"類似名エージェント（統合検討）: {a} / {b}")
+
+    # 現役エージェントの body 内で退避済みエージェント名を参照していないか
+    # （router 等のルーティング表は Registry 上の現役エージェントのみ参照する運用）
+    archived = sorted(n for n, t in registry.items() if t == "archive-candidate")
+    if archived:
+        # ハイフン連結の別名（例: system-architect 内の architect）は誤検知なので除外
+        pat = re.compile(
+            r"(?<![\w-])(" + "|".join(re.escape(n) for n in archived) + r")(?![\w-])"
+        )
+        for f in sorted(AGENTS_DIR.glob("*.md")):
+            for i, line in enumerate(f.read_text(encoding="utf-8").splitlines(), 1):
+                m = pat.search(line)
+                if m:
+                    warn(f"退避済みエージェント {m.group(1)} を参照: "
+                         f".claude/agents/{f.name}:{i}（現役エージェントに置き換えるか復帰させる）")
 
     core = [n for n, t in registry.items() if t == "core"]
     if len(core) > MAX_CORE:

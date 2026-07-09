@@ -19,6 +19,7 @@
 - 3ヶ月使われていない / 責務が他エージェントと80%重複 / 責任範囲を一文で説明できない → **archive-candidate**
 - アーカイブ = `git mv .claude/agents/X.md docs/ai-org/agents/archive/X.md` + Registry の tier 変更（定義は消さない・復帰可能）
 - 完全削除は人間の承認後のみ。統合時は吸収先エージェントの body に役割を追記する
+- **router や手動ルーティング表（Crew表・エージェント一覧を持つ body）は Registry 上の現役（core/optional）エージェントのみ参照する。** アーカイブ時は参照元を現役エージェントに置き換える（validator が退避済み参照を警告する）
 
 ## 責任分界
 | 対象 | 置き場所 |
