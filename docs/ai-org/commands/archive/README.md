@@ -5,4 +5,4 @@
 - 退避理由・統合先: `docs/ai-org/COMMAND_REGISTRY.md` の archive-candidate 表を参照
 - **復帰手順**: ファイルを `.claude/commands/` に `git mv` で戻し、COMMAND_REGISTRY.md の tier を optional/core に変更して同じPRでコミット
 - **完全削除**: 人間の承認を得た上でファイル削除 + Registry から行を削除（`COMMAND_POLICY.md` の削除基準に従う）
-- 注意: `.claude/skills/<カテゴリ>/` に同一内容のコピーが残っている場合があるが、SKILL.md がないため読み込まれない（二重管理の解消は別途人間判断）
+- コマンドの実体は `.claude/commands/` のみ（SSOT）。`.claude/skills/` へのコピー作成は禁止（validator が検知）
