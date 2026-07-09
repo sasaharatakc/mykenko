@@ -2,7 +2,7 @@
 
 > このファイルは毎セッション自動読み込みされる CLAUDE.md から退避した参照資料。
 > Crew 編成・スキル分類・Memory Layer の全体像が必要になったときだけ読むこと。
-> 個々のエージェント定義は `.claude/agents/`、スキル定義は `.claude/skills/`・`.claude/commands/` に実体があり、Claude Code はそれらを自動認識する（この表を読む必要はない）。
+> 個々のエージェント定義は `.claude/agents/`、コマンド（スキル）定義は `.claude/commands/` に実体があり、Claude Code はそれらを自動認識する（この表を読む必要はない）。
 > **現在の有効なエージェント台帳（core/optional/archive の tier 管理）は `docs/ai-org/AGENT_REGISTRY.md` が SSOT。** 以下の Crew 表は設計時の全体像であり、一部エージェントは `docs/ai-org/agents/archive/` に退避済み。
 
 ## 動作モデル

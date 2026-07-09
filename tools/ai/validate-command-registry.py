@@ -10,6 +10,7 @@ WARNING中心（exit 0）。--strict で警告があれば exit 1。
   - 類似名コマンド（同一語幹）
   - core 指定が多すぎる場合（>12）
   - 現役コマンドの body が archive-candidate を参照していないか
+  - .claude/skills/ にコマンドの重複コピーが再作成されていないか（SSOTは .claude/commands/）
 依存: 標準ライブラリのみ。
 """
 import argparse
@@ -118,6 +119,17 @@ def main() -> int:
                 if m:
                     warn(f"退避済みコマンド /{m.group(1)} を参照: "
                          f".claude/commands/{f.name}:{i}（現役コマンドに置き換えるか復帰させる）")
+
+    # .claude/skills/ への重複コピー再作成の検知（コマンドのSSOTは .claude/commands/ のみ。
+    # SKILL.md を持つ正規のスキルディレクトリは対象外）
+    skills_dir = REPO / ".claude" / "skills"
+    if skills_dir.exists():
+        for f in sorted(skills_dir.rglob("*.md")):
+            if f.name == "SKILL.md" or (f.parent / "SKILL.md").exists():
+                continue
+            if f.stem in registry:
+                warn(f"コマンドの重複コピー: {f.relative_to(REPO)}"
+                     f"（SSOTは .claude/commands/{f.stem}.md — コピーは削除する）")
 
     core = [n for n, t in registry.items() if t == "core"]
     if len(core) > MAX_CORE:
