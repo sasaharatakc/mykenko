@@ -22,7 +22,8 @@ mykenko/
 │   ├── db/            # 共有 DB スキーマ（db:generate / db:migrate / db:studio）
 │   └── config/        # 共有設定
 ├── scripts/           # データ投入（import:symptoms / import:ingredients / import:all）
-├── docs/              # architecture / compliance / db / operations / seo
+├── tools/             # リポジトリ横断バリデーション（validate_all.sh / ai/validate-agent-registry.py）
+├── docs/              # architecture / compliance / db / operations / seo / ai-org（AGENT_REGISTRY・AGENT_POLICY）
 ├── GOAL_MAP.md        # EC 機能の実装進捗マップ（フェーズ別 ✅/🔶/❌）
 └── docker-compose.yml # PostgreSQL 16 / Meilisearch / Qdrant / n8n / Ollama
 ```
@@ -55,6 +56,7 @@ mykenko/
 | frontend/ 単独 | `npm run lint` / `npm test` / `npm run build`（frontend/ 内で実行） |
 | backend/ | `php artisan test` / `php artisan route:list` |
 | 開発サーバ | frontend: `npm run dev`（:3000）/ backend: `php artisan serve --port=8000` |
+| AI設定の検証 | `bash tools/validate_all.sh`（エージェント台帳の整合チェック） |
 
 ## CI / GitHub
 
