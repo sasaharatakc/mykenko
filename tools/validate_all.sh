@@ -6,6 +6,9 @@ cd "$(dirname "$0")/.."
 status=0
 
 echo "== agent registry =="
-python3 tools/ai/validate-agent-registry.py || status=1
+python3 tools/ai/validate-agent-registry.py --strict || status=1
+
+echo "== command registry =="
+python3 tools/ai/validate-command-registry.py --strict || status=1
 
 exit $status

@@ -7,7 +7,7 @@
 - マップにない情報だけをピンポイントで調べ、構造を変えるPRではマップも同じPRで更新する。
 - ファイルは必要な範囲だけ読む。同じファイル・同じIssue/PRを同一セッションで再取得しない。
 - 出力は結論優先。最終報告は「変更ファイル・検証結果・リスク・次のアクション」に絞る。
-- AIエージェント定義に触れる場合: 台帳は `docs/ai-org/AGENT_REGISTRY.md`、運用ルールは `docs/ai-org/AGENT_POLICY.md`。似たエージェントの新規作成禁止・Registry更新必須（検証: `python3 tools/ai/validate-agent-registry.py`）。
+- AIエージェント/コマンド定義に触れる場合: 台帳は `docs/ai-org/AGENT_REGISTRY.md`・`docs/ai-org/COMMAND_REGISTRY.md`、運用ルールは各 POLICY。似たエージェント/コマンドの新規作成禁止・Registry更新必須（検証: `bash tools/validate_all.sh`）。導線: `docs/ai-org/README.md`。
 
 ## リポジトリ概要
 - pnpm workspace + Turborepo モノレポ。詳細は `docs/CODEBASE_MAP.md`。
