@@ -9,6 +9,7 @@ MYKENKOのSEO・GEO戦略ドキュメント。
 | `v2_06_INTERNAL_LINK.md` | 内部リンク戦略・自動化 |
 | `v2_07_CATEGORY_MASTER.md` | カテゴリマスタ・L1/L2/L3階層 |
 | `v2_10_AI_GEO_DESIGN.md` | GEO（Generative Engine Optimization）戦略 |
+| `MEDISEO_AIPM_INTEGRATION_V5.md` | MediSEO × AIPM 統合設計 v5.0（スナップショット指向・実行可能契約） |
 
 ## GEO対応クローラー
 
