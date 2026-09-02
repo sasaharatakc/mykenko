@@ -4,6 +4,7 @@ MYKENKOのSEO・GEO戦略ドキュメント。
 
 | ファイル | 内容 |
 |---------|------|
+| `SITEMAP_ARCHITECTURE.md` | サイトマップ最適化・4軸クラスタリング設計（カテゴリー／成分／疾患／部位） |
 | `v2_04_SITEMAP.md` | サイトマップ設計・XMLサイトマップ実装 |
 | `v2_05_URL_DESIGN.md` | URL設計・正規化・リダイレクト |
 | `v2_06_INTERNAL_LINK.md` | 内部リンク戦略・自動化 |
