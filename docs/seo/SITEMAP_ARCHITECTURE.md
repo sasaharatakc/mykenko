@@ -240,3 +240,119 @@
 大カテゴリ（約30）: AGA・薄毛治療薬 / ヘアケア / スキンケア・美容 / 皮膚疾患治療薬 / アレルギー・花粉症 / 呼吸器・風邪ケア / 痛み止め・解熱薬 / ED・性の健康 / 性感染症治療薬 / 女性の健康 / 胃腸ケア / 生活習慣病 / メンタルヘルス・脳神経 / アイケア・目の健康 / ダイエット・体重管理 / ビタミン・ミネラル / スポーツ栄養 / 骨・関節ケア / 腎臓・泌尿器ケア / ホルモン・甲状腺 / 抗生物質・感染症治療薬 / アーユルヴェーダ / ホメオパシー / 栄養補助食品・スーパーフード / ベビー・キッズケア / 禁煙・禁酒サポート / ペットケア
 
 > サブカテゴリ162件の完全な対応表は入力スプレッドシート（CL-001〜）を正とする。本提案では「医薬品=ハブ型／非医薬品=一覧型」の二分と、大カテゴリの8〜12集約を推奨。
+
+---
+
+## 9. 最終確定サイトマップ（完全版・競合優位設計）
+
+> 対象競合: オオサカ堂 / くすりエクスプレス / お薬なび / ベストケンコー 等の個人輸入代行。
+> 勝ち筋: 競合は「カテゴリ→商品」の浅い2階層に留まる。MYKENKOは **疾患×成分×商品の三重内部リンク（トピッククラスタ）+ GEO/AI検索最適化 + E-E-A-T** で情報深度と被引用性で上回る。
+
+### 9.1 競合との差別化サマリー
+
+| 観点 | 競合の典型 | MYKENKOの勝ち筋 |
+|------|-----------|-----------------|
+| 情報構造 | カテゴリ一覧→商品（2階層・薄い） | 疾患↔成分↔カテゴリ↔商品の相互リンク（トピック権威） |
+| 検索意図 | 商品名・成分名の指名のみ | 疾患・症状・部位の悩み起点KWまで面で獲得 |
+| AI検索(GEO) | 未対応が多い | 構造化データ＋一次情報引用で被引用（Perplexity/AIO/ChatGPT） |
+| E-E-A-T | 運営情報が薄い | 監修者・編集方針・出典明示・更新日で信頼性 |
+| 回遊 | 関連商品のみ | 診断/セルフチェック・比較・FAQで滞在と回遊 |
+| 薬機法 | 効能で並べがち（リスク） | 商品面と効能解説を分離（安全かつ網羅） |
+
+### 9.2 完全サイトマップ（URL・index方針・ページ型・狙う意図）
+
+```
+/                                         index   TOP（各ハブ入口・特集）
+│
+■ 商品（SSOT）
+├─ /products                              index*  商品検索UI（トップのみindex/絞込結果はnoindex+canonical）
+│   └─ /products/{product-slug}           index   商品詳細（全リンク集約先。Product schema）
+│
+■ クラスタリング3軸（トピック権威の中核）
+├─ /categories                            index   カテゴリ体系トップ（8–12大カテゴリに集約）
+│   └─ /categories/{category-slug}        index   医薬品=ハブ型 / 非医薬品=一覧型
+│       └─ /categories/{cat}/{subcat}     index   中カテゴリ（162サブカテゴリ）
+├─ /ingredients                           index   成分トップ（一般名ハブ・正典=EC）
+│   └─ /ingredients/{ingredient-slug}     index   成分詳細（Drug/Supplement schema・含有商品）
+├─ /conditions                            index   疾患・症状・部位トップ（悩み起点の主戦場）
+│   ├─ /conditions/{condition-slug}       index   疾患詳細（MedicalWebPage・関連成分/商品/FAQ）
+│   └─ /conditions?part={part}            noindex 部位フィルタ（独立URLは作らない）
+│
+■ 競合優位の武器ページ（他社が持たない）
+├─ /compare                               index   成分・薬剤タイプ比較（例: フィナ vs デュタ）
+│   └─ /compare/{topic-slug}              index   比較記事（ItemList/Table schema）
+├─ /check                                 index   セルフチェック/診断ハブ（AGA・ED・花粉症等）
+│   └─ /check/{condition-slug}            index   診断ツール（回遊・被リンク獲得・LP流入受け）
+├─ /guides                                index   使い方・服用ガイド（HowTo schema）
+│   └─ /guides/{slug}                     index   個別ガイド
+├─ /column                                index   コラム/記事（E-E-A-T・GEO被引用の本体）
+│   └─ /column/{slug}                     index   記事（Article・監修者・出典・更新日）
+├─ /ranking                               index   人気/閲覧ランキング（※医薬品は効能訴求せず販売実績ベースに限定）
+│   └─ /ranking/{slug}                    index   カテゴリ別ランキング
+├─ /faq                                   index   よくある質問（FAQPage schema）
+│   └─ /faq/{category}                    index   カテゴリ別FAQ
+│
+■ ブランド・販売者
+├─ /brands  /brands/{slug}                index   ブランド（製造元）ハブ
+├─ /stores  /stores/{slug}                index   出店者ページ
+│
+■ 会社・信頼性（E-E-A-T / YMYL必須）
+├─ /about                                 index   運営者概要
+├─ /specified-commercial-transactions     index   特商法表記
+├─ /personal-import                       index   個人輸入の仕組み・注意
+├─ /order-guide                           index   注文ガイド
+├─ /editorial-policy                      index   編集方針（情報源・AI・広告表現）
+├─ /supervisors                           index   監修者一覧（★E-E-A-T強化・他社が弱い）
+│   └─ /supervisors/{slug}                index   監修者プロフィール（Person schema）
+├─ /terms  /privacy  /cookie-policy       index   規約・個人情報・Cookie
+├─ /sitemap                               index   HTMLサイトマップ（回遊・発見性）
+│
+■ キャンペーン
+├─ /campaign-list                         index   キャンペーン一覧
+│   └─ /campaign-list/{slug}              index   キャンペーン詳細（動的URL化）
+│
+■ 認証・購入・会員（noindex）
+├─ /login /register /doctor/login /consultation
+├─ /cart /checkout /checkout/confirm /checkout/complete
+├─ /account/*（=マイページ配下すべて）  /tracking
+└─ /404 /search（検索結果はnoindex）
+
+* /products トップのみ index。?q=/?category=/?ingredient=/?sort= 等の絞込は noindex + canonical。
+```
+
+### 9.3 トピッククラスタ（内部リンク）の勝ちパターン
+
+例: AGA（脱毛）クラスタ — 競合は「AGA商品一覧」1枚だが、MYKENKOは面で構成する。
+
+```
+[疾患] /conditions/aga  ──┬─ [診断] /check/aga
+   ▲  ▲  ▲               ├─ [比較] /compare/finasteride-vs-dutasteride
+   │  │  └───── [コラム] /column/aga-*（原因・対策・副作用・体験）
+   │  └──────── [成分] /ingredients/finasteride, /minoxidil, /dutasteride
+   │                        │（含有商品）
+   └──[カテゴリ] /categories/aga-treatment ──▼
+                                    [商品] /products/{slug}  ← 集約先（唯一の購入面）
+```
+
+- **相互リンク必須**: 疾患→成分→商品→比較→診断→コラム→疾患 の環状リンクでクラスタ内PageRankを循環。
+- **1クラスタ = 1疾患**を単位に、AGA/ED/STD/花粉症/ダイエット等の主要クラスタから着手（検索volと収益の高い順）。
+- 自動化は `/internal-link`・`internal-link-seo` で「成分↔含有商品」「疾患↔関連成分」を機械生成。
+
+### 9.4 GEO / AI検索で勝つ要件（競合が未対応）
+
+- 各ハブ冒頭に**40–60字の定義文（回答スニペット）**を置き、AI Overview/Perplexityに引用させる。
+- `MedicalWebPage` `Drug` `FAQPage` `HowTo` `BreadcrumbList` `Person`(監修者) を全ハブで実装。
+- robots で GPTBot/PerplexityBot/ClaudeBot を全ドメイン許可（既存メディア方針をEC・全体に展開）。
+- 一次情報（添付文書・公的機関・論文）へ**出典リンク＋監修者名＋最終更新日**を明示 → E-E-A-T と被引用の両立。
+
+### 9.5 実装の着手順（改訂ロードマップ）
+
+| 優先 | 施策 | 効果 |
+|------|------|------|
+| S | URL重複301統一（§5.2/5.3）+ `/products` 絞込の noindex/canonical | インデックス健全化・カニバリ解消 |
+| S | 医薬品カテゴリ/疾患のハブ化テンプレート（一覧型/ハブ型分岐） | 薬機法リスク回避 |
+| A | `/conditions` 統合軸 + 主要5クラスタ（AGA/ED/STD/花粉症/ダイエット）構築 | 悩み起点KWの面獲得 |
+| A | 成分ハブEC一本化 + 成分↔商品自動内部リンク | トピック権威・回遊 |
+| A | 構造化データ全ハブ実装 + `sitemap.ts` 拡充・分割 | リッチリザルト・GEO被引用 |
+| B | `/compare`・`/check`・`/supervisors` の武器ページ | 差別化・被リンク・E-E-A-T |
+| B | `/column` の監修・出典・更新日運用フロー | YMYL信頼性 |
