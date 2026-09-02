@@ -10,7 +10,8 @@
 ## 0. 結論サマリー
 
 - **医薬品は「一覧（商品グリッド）」ではなく「情報ハブ」として設計する。** 薬機法・医療広告ガイドライン上、医薬品を効能で並べた通販的な一覧は不可。カテゴリー／疾患／部位ページは**解説＋成分＋個別 `/products/{slug}` への内部リンク集**にする（商品カードの羅列にしない）。
-- **クラスタリングは4軸のハブ&スポークで構成する。** 「カテゴリー（体系）」「成分（一般名）」「疾患・症状（検索意図）」「部位（探索起点）」の4つを**別レイヤーの情報ハブ**とし、すべてが最終的に `/products/{slug}`（唯一の商品SSOT）へ集約する。
+- **クラスタリングは3軸のハブ&スポークで構成する。** 「カテゴリー（体系）」「成分（一般名）」「疾患・症状・部位（悩み起点＝統合軸）」の3つを**別レイヤーの情報ハブ**とし、すべてが最終的に `/products/{slug}`（唯一の商品SSOT）へ集約する。
+  - **確定事項（2026-09-02）**: ① 疾患・症状・部位は分割せず**単一軸 `/conditions` に統合**（部位はその中のフィルタ／導線として扱い、独立URLツリーを作らない）。② 成分ハブの正典は**EC（`/ingredients`）**とし、メディア側はECへ寄せる／canonicalで一本化する。
 - **既存ルートに重複・表記ゆれが多数あり、統合とリダイレクトが最優先課題。** `/guide`↔`/guides`、`/ingredient`↔`/ingredients`、EC `/symptoms` ↔ メディア `/symptoms` のカニバリゼーションを解消する。
 - **スプレッドシートの42ページは概ね妥当**。ただし「疾患（disease）」軸が明示されておらず、「部位」1軸に情報探索が集約されている点が**不足**。逆に認証・マイページ配下は十分（過剰ではない）。詳細は §6。
 
@@ -70,15 +71,14 @@
 ├─ /products                          … 商品検索・一覧（全商品SSOT。医薬品も横断検索はここ）
 │  └─ /products/{product-slug}        … 商品詳細（唯一の商品URL。canonical固定）
 │
-├─ ■ クラスタリング4軸（情報ハブ）
+├─ ■ クラスタリング3軸（情報ハブ）
 │  ├─ /categories                     … カテゴリ体系トップ（30大カテゴリのハブ）
 │  │  └─ /categories/{category-slug}  … 大/中カテゴリ（医薬品=ハブ型 / 非医薬品=一覧型）
-│  ├─ /ingredients                    … 成分トップ（一般名ハブ）
+│  ├─ /ingredients                    … 成分トップ（一般名ハブ。★正典=EC）
 │  │  └─ /ingredients/{ingredient-slug} … 成分詳細（例: finasteride, sildenafil）
-│  ├─ /conditions                     … 疾患・症状トップ（★新設 = 検索意図の主戦場）
-│  │  └─ /conditions/{condition-slug} … 疾患詳細（例: aga, ed, chlamydia, hay-fever）
-│  └─ /body                           … 部位から探す（探索UIの起点。疾患/カテゴリへ送客）
-│     └─ /body/{part-slug}            … 部位別（例: head, skin, stomach, eye）
+│  └─ /conditions                     … 疾患・症状・部位トップ（★統合軸 = 検索意図の主戦場）
+│     ├─ /conditions/{condition-slug} … 疾患・症状詳細（例: aga, ed, chlamydia, hay-fever）
+│     └─ /conditions?part={part}      … 部位フィルタ（head/skin/stomach/eye 等。独立URLは作らない）
 │
 ├─ ■ コンテンツ
 │  ├─ /column（or /blog）             … コラム/記事一覧
@@ -108,11 +108,10 @@
 | 軸 | URL | 検索意図 | ページ型 | 一覧可否 |
 |----|-----|----------|----------|----------|
 | **カテゴリー** | `/categories/{slug}` | 「AGA 薬」「プロテイン おすすめ」等の体系的探索 | 医薬品=ハブ / 非医薬品=一覧 | 医薬品は不可 |
-| **成分** | `/ingredients/{slug}` | 「フィナステリド 効果」等の一般名指名 | 情報ハブ（成分解説＋含有商品リンク） | リンク集のみ |
-| **疾患・症状** | `/conditions/{slug}` | 「ED 治療」「クラミジア 市販」等の悩み起点 | 情報ハブ（疾患解説＋関連成分＋関連商品） | リンク集のみ |
-| **部位** | `/body/{slug}` | 「頭」「胃」等の曖昧・探索初期 | ファセット/導線ページ（疾患・カテゴリへ送客） | 導線のみ |
+| **成分** | `/ingredients/{slug}` | 「フィナステリド 効果」等の一般名指名 | 情報ハブ（成分解説＋含有商品リンク。★正典=EC） | リンク集のみ |
+| **疾患・症状・部位** | `/conditions/{slug}`（部位は `?part=` フィルタ） | 「ED 治療」「クラミジア 市販」「頭の悩み」等 | 情報ハブ（疾患解説＋関連成分＋関連商品。部位から絞込導線） | リンク集のみ |
 
-> 原則: **1キーワード=1担当ページ**。同じ「AGA」を category・condition の両方で最上位に狙わない。`condition/aga` を疾患の主ページ、`categories/aga-treatment` は薬剤タイプ（フィナ/デュタ/ミノキ）の体系整理、と意図を分ける。
+> 原則: **1キーワード=1担当ページ**。同じ「AGA」を category・condition の両方で最上位に狙わない。`conditions/aga` を疾患の主ページ、`categories/aga-treatment` は薬剤タイプ（フィナ/デュタ/ミノキ）の体系整理、と意図を分ける。部位は独立URLを作らず `/conditions` 内のフィルタ導線に集約する。
 
 ---
 
@@ -149,11 +148,11 @@
 ### 4.3 成分ハブ `/ingredients`
 
 - 一般名（finasteride, minoxidil, sildenafil, tadalafil, ivermectin …）は**指名検索が強く、GEO/AI検索でも引用されやすい**最重要資産。EC・メディアで**二重に作らない**。
-- 推奨: **メディア（mykenko.jp）に成分解説の正典を置き**、EC側 `/ingredients/{slug}` は「この成分を含む商品」への導線に特化 or メディアへcanonical。少なくとも `DietarySupplementJsonLd`/薬剤は適切なschemaを付与。
+- **確定: 正典はEC `/ingredients/{slug}`**（成分解説＋含有商品への導線を1ページに統合）。メディア側 `apps/media/.../ingredients/*` は**ECへ301 or `<link rel="canonical">` でECを指す**。既存EC `/ingredient`（単数）は `/ingredients` へ301（§5.2）。`Drug`/`DietarySupplement` schema を付与。
 
-### 4.4 疾患軸 `/conditions`（新設）と `/purpose` の整理
+### 4.4 疾患・症状・部位の統合軸 `/conditions` と `/purpose` の整理
 
-- 現状 `/symptoms`・`/purpose`・（提案）`/body-symptoms` が意味的に重なる。**「疾患・症状=`/conditions`」を主軸に一本化**し、`/body`（部位）はその上位の探索UIとして残す。
+- **確定: 疾患・症状・部位は分割せず単一軸 `/conditions` に統合**。現状の `/symptoms`・（提案）`/body-symptoms` は `/conditions` に一本化し301。部位は独立URLツリー（`/body/{part}`）を作らず、`/conditions` 内の**フィルタ／ナビ導線（`?part=` またはページ内アンカー）**として提供する。→ 検索意図の重複・カニバリと薄いページ量産を回避。
 - `/purpose`（目的別: 美白・ダイエット等）は疾患ではないテーマも含むため、**非医薬品カテゴリの別名として `/categories` に吸収**するか、廃止して301。単独で残す積極的理由は薄い。
 
 ---
@@ -170,10 +169,11 @@
 
 | 現行 | 統一先 | 理由 |
 |------|--------|------|
-| `/ingredient`, `/ingredient/*` | `/ingredients`, `/ingredients/*` | メディア・スプレッドシートと整合 |
+| EC `/ingredient`, `/ingredient/*` | `/ingredients`, `/ingredients/*` | 成分ハブの正典=EC（確定）に統一 |
+| メディア `/ingredients/*` | EC `/ingredients/*`（canonical or 301） | 正典=EC（確定）。二重化解消 |
 | `/guide` | `/guides` | 重複解消 |
 | `/shop` | `/products` | 商品入口の一本化 |
-| EC `/symptoms/*` | `/conditions/*`（役割再定義） | 疾患軸の明確化・カニバリ回避 |
+| EC `/symptoms/*`, `/body-symptoms/*` | `/conditions/*`（部位は `?part=`） | 疾患・症状・部位の統合軸（確定） |
 | `/purpose/*` | `/categories/*` or 廃止 | 意味重複 |
 
 ### 5.3 スプレッドシート新slug ↔ 既存の移行マッピング（実装前に確定）
@@ -193,8 +193,8 @@
 
 ### 6.1 不足（追加推奨）
 
-1. **疾患軸ページ `/conditions/{slug}`** — 現状は `/body-symptoms`（部位）に情報探索が集約されている。ユーザーの検索は「ED 治療薬」「花粉症 薬」のような**疾患名起点**が主流。部位だけでは指名検索を取りこぼす。→ 疾患ハブを独立させる。
-2. **成分ハブのSSOT定義** — EC/メディアどちらが正典か未定義。二重化するとカニバる（§4.3）。
+1. **疾患・症状・部位の統合軸 `/conditions/{slug}`（確定=採用）** — スプレッドシートは情報探索を「部位（/body-symptoms）」に寄せているが、検索は「ED 治療薬」「花粉症 薬」等の**疾患名起点**が主流。→ 疾患・症状・部位を単一の `/conditions` に統合し、部位はフィルタ導線として提供（§4.4）。
+2. **成分ハブのSSOT（確定=EC）** — EC `/ingredients` を正典とし、メディアはcanonical/301（§4.3）。
 3. **HTMLサイトマップ `/sitemap`** はスプレッドシートにあるが、**カテゴリ×成分×疾患の相互リンク面**としての設計指針が無い。回遊ハブとして明記。
 4. **キャンペーン詳細の動的URL** `/campaign-list/{slug}`（現状 `/campaign-list/detail` 固定は複数キャンペーンでURL重複）。
 5. **404以外のシステムページ**（500、メンテナンス）方針。
@@ -215,7 +215,7 @@
 
 ## 7. XMLサイトマップ／robots／構造化データ
 
-- `frontend/src/app/sitemap.ts` に **ingredients / conditions / body / brands / guides を追加**（現状 products/categories/stores/blog のみ）。noindexページ（cart/checkout/account/login等）は**掲載しない**。
+- `frontend/src/app/sitemap.ts` に **ingredients / conditions / brands / guides を追加**（現状 products/categories/stores/blog のみ。部位は `/conditions` のフィルタのため独立URLは登録しない）。noindexページ（cart/checkout/account/login等）は**掲載しない**。
 - 規模拡大に備え**サイトマップインデックス分割**（products専用、taxonomy専用、content専用）を検討。
 - 構造化データ（`packages/seo`）: 疾患=`MedicalWebPage`/`MedicalCondition`、成分=`Drug`/`DietarySupplement`、商品=`Product`（価格・在庫）、パンくず=`BreadcrumbList`、FAQ=`FAQPage`。GEO向けにボット許可（GPTBot/PerplexityBot/ClaudeBot）は既存方針を全ドメインに展開。
 
@@ -227,8 +227,8 @@
 |------|------|----------|
 | S | URL重複・大文字の301統一（§5.2, §5.3） | frontend + backend redirects |
 | S | 医薬品カテゴリ/疾患ページのハブ化（一覧型/ハブ型の分岐） | frontend テンプレート + compliance |
-| A | `/conditions` 疾患軸の新設と `/symptoms`・`/purpose` の整理 | frontend + CMS |
-| A | 成分ハブのSSOT確定（EC or メディア）とcanonical | frontend + media |
+| A | `/conditions` 統合軸の新設（疾患・症状・部位）と `/symptoms`・`/body-symptoms`・`/purpose` の301統合 | frontend + CMS |
+| A | 成分ハブ=EC `/ingredients` に一本化、メディアはcanonical/301 | frontend + media |
 | A | `sitemap.ts` 拡充・分割 | frontend |
 | B | 内部リンク自動化（疾患↔成分↔カテゴリ↔商品） | media/内部リンク |
 | B | カテゴリマスタ正規化（表記ゆれ修正・第1階層集約） | データ |
