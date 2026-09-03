@@ -18,10 +18,32 @@ service chips + hairline structure + scroll reveal で構成した、高難度�
 ダーク B2B コーポレート TOP。Hero → Philosophy → Business → Corporate/RegTech Services →
 Integrated Solutions → Identity → Company → Contact → FAQ → Final CTA。
 
+## Preview URL（ホスト版・すぐ確認できます）
+
+https://claude.ai/code/artifact/c410fbc0-838a-46c5-bcb4-4ea8c3715f82
+
+> クラウド実行環境のため `localhost` は外部から開けません。上記は同一デザインを
+> claude.ai 上でホストしたプレビューです（Next.js のレンダリング結果と同一の HTML）。
+
 ## How to run
 
+### Next.js 実装（`minamoto-next/`）
+
 ```bash
-# 静的 HTML。ブラウザで直接開くだけで動作
+cd minamoto-next
+npm install
+npm run dev      # → http://localhost:3000（開発）
+# もしくは本番モード
+npm run build && npm run start   # → http://localhost:3000
+```
+
+Next.js 14（App Router / TypeScript）。`app/page.tsx` が単一ページ、`app/globals.css` が
+デザインシステム。インタラクション（ヘッダー scroll / IntersectionObserver reveal /
+FAQ アコーディオン / モバイルナビ）はクライアントコンポーネントで実装。
+
+### 静的 HTML（`index.html`・フレームワーク不要）
+
+```bash
 open index.html                 # もしくは
 python3 -m http.server 8080     # → http://localhost:8080
 
@@ -30,8 +52,9 @@ npm install
 node shot.js                    # → output/{desktop,mobile}-{fold,full}.png
 ```
 
-依存: `playwright-core`（screenshot 用のみ）。ページ本体は外部 JS ライブラリ不使用。
-Web フォントのみ Google Fonts（Space Grotesk / Zen Kaku Gothic New / JetBrains Mono）。
+依存: 静的版は外部 JS ライブラリ不使用。Web フォントのみ Google Fonts
+（Space Grotesk / Zen Kaku Gothic New / JetBrains Mono）。
+`artifact.html` は claude.ai Artifact 用に document ラッパーを外した同一ページ。
 
 ## Files
 
