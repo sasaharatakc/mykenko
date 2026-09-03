@@ -12,21 +12,9 @@ const NAV = [
 ] as const;
 
 const MVV = [
-  {
-    label: "Our Mission",
-    title: ["企業の可能性を、", "次の未来へつなげる。"],
-    body: "目の前の課題を解決するだけではなく、その先にある成長まで考える。新しい技術やアイデアを磨き続け、企業が前へ進むための選択肢を増やしていきます。",
-  },
-  {
-    label: "Our Vision",
-    title: ["挑戦が、", "次の時代をつくる。"],
-    body: "変化を恐れず、新しいサービスや事業に挑戦する。一つひとつの挑戦を未来につなげ、新しい価値が生まれる循環をつくります。",
-  },
-  {
-    label: "Our Value",
-    title: ["考える。試す。", "前へ進める。"],
-    body: "事業を深く理解する。試行錯誤を続ける。結果に向き合う。一人では生まれない成果を、人と人の力をつなぐことで実現していきます。",
-  },
+  { label: "Our Mission", title: ["企業の可能性を、", "次の未来へつなげる。"], body: "目の前の課題を解決するだけではなく、その先にある成長まで考える。新しい技術やアイデアを磨き続け、企業が前へ進むための選択肢を増やしていきます。" },
+  { label: "Our Vision", title: ["挑戦が、", "次の時代をつくる。"], body: "変化を恐れず、新しいサービスや事業に挑戦する。一つひとつの挑戦を未来につなげ、新しい価値が生まれる循環をつくります。" },
+  { label: "Our Value", title: ["考える。試す。", "前へ進める。"], body: "事業を深く理解する。試行錯誤を続ける。結果に向き合う。一人では生まれない成果を、人と人の力をつなぐことで実現していきます。" },
 ];
 
 const CORPORATE = [
@@ -59,12 +47,25 @@ const FAQ = [
 
 const MARQUEE = ["公的資金調達", "経営コンサルティング", "風評被害対策", "アプリ開発", "ソーシャルメディア", "宣伝・広告", "リファラル"];
 
+/* ---------- masked kinetic heading (React-native, no DOM mutation) ---------- */
+function Kinetic({ tag: Tag = "h2", className = "", lines }: { tag?: any; className?: string; lines: string[] }) {
+  return (
+    <Tag className={`kinetic ${className}`}>
+      {lines.map((l, i) => (
+        <span className="line-mask" key={i}>
+          <span className="line-inner" style={{ transitionDelay: `${i * 0.09}s` }}>{l}</span>
+        </span>
+      ))}
+    </Tag>
+  );
+}
+
 /* ---------- FAQ item ---------- */
-function FaqItem({ q, question, answer, cls }: { q: string; question: string; answer: string; cls: string }) {
+function FaqItem({ q, question, answer }: { q: string; question: string; answer: string }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   return (
-    <div className={`faq-item ${cls}${open ? " open" : ""}`}>
+    <div className={`faq-item reveal${open ? " open" : ""}`}>
       <button className="faq-q" aria-expanded={open} onClick={() => setOpen((o) => !o)}>
         <span className="index-mark">{q}</span>
         <span>{question}</span>
@@ -78,16 +79,21 @@ function FaqItem({ q, question, answer, cls }: { q: string; question: string; an
 }
 
 export default function Page() {
-  const [scrolled, setScrolled] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
   const [year, setYear] = useState<number | null>(null);
 
   useEffect(() => {
     setYear(new Date().getFullYear());
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    const header = document.querySelector<HTMLElement>(".site-header");
+    const glow = document.querySelector<HTMLElement>(".hero-glow");
+    const grid = document.querySelector<HTMLElement>(".hero-grid-bg");
 
+    /* opt into entrance animations only once JS runs (keeps first frame visible) */
+    if (!reduce) document.documentElement.classList.add("motion");
+
+    /* --- scroll reveal (fade-up + kinetic lines) --- */
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -97,13 +103,73 @@ export default function Page() {
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+      { threshold: 0.14, rootMargin: "0px 0px -8% 0px" }
     );
-    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+    document.querySelectorAll(".reveal, .kinetic").forEach((el) => io.observe(el));
 
+    /* --- momentum smooth scroll + hero parallax --- */
+    let y = window.scrollY;
+    let target = y;
+    let active = false;
+    const maxY = () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    const setHeader = () => header && header.classList.toggle("scrolled", y > 24);
+    const parallax = () => {
+      if (glow) glow.style.transform = `translate3d(0,${y * 0.18}px,0)`;
+      if (grid) grid.style.transform = `translate3d(0,${y * 0.1}px,0)`;
+    };
+    const apply = () => {
+      window.scrollTo(0, y);
+      parallax();
+      setHeader();
+    };
+    const raf = () => {
+      y += (target - y) * 0.09;
+      if (Math.abs(target - y) < 0.4) { y = target; active = false; }
+      apply();
+      if (active) requestAnimationFrame(raf);
+    };
+    const kick = () => { if (!active) { active = true; requestAnimationFrame(raf); } };
+
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey) return; // let pinch-zoom through
+      e.preventDefault();
+      target = Math.max(0, Math.min(maxY(), target + e.deltaY));
+      kick();
+    };
+    const onNativeScroll = () => { if (!active) { y = target = window.scrollY; parallax(); setHeader(); } };
+
+    if (!reduce && !coarse) {
+      window.addEventListener("wheel", onWheel, { passive: false });
+      window.addEventListener("scroll", onNativeScroll, { passive: true });
+    } else {
+      window.addEventListener("scroll", () => { y = window.scrollY; setHeader(); }, { passive: true });
+    }
+
+    /* --- anchor smooth scroll to target (fixed-header offset) --- */
+    const anchors = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'));
+    const onAnchor = (e: Event, a: HTMLAnchorElement) => {
+      const id = a.getAttribute("href") || "";
+      if (id.length < 2) return;
+      const t = document.querySelector<HTMLElement>(id);
+      if (!t) return;
+      e.preventDefault();
+      let top = t.getBoundingClientRect().top + window.scrollY - 72;
+      top = Math.max(0, Math.min(maxY(), top));
+      if (reduce || coarse) { window.scrollTo({ top, behavior: reduce ? "auto" : "smooth" }); }
+      else { target = top; kick(); }
+    };
+    const handlers = anchors.map((a) => {
+      const h = (e: Event) => onAnchor(e, a);
+      a.addEventListener("click", h);
+      return [a, h] as const;
+    });
+
+    setHeader();
     return () => {
-      window.removeEventListener("scroll", onScroll);
       io.disconnect();
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("scroll", onNativeScroll);
+      handlers.forEach(([a, h]) => a.removeEventListener("click", h));
     };
   }, []);
 
@@ -112,7 +178,7 @@ export default function Page() {
   return (
     <>
       {/* ============ HEADER ============ */}
-      <header className={`site-header${scrolled ? " scrolled" : ""}`}>
+      <header className="site-header">
         <div className="container nav">
           <a href="#top" className="brand"><span className="dot" />MINAMOTO</a>
           <nav className="nav-links">
@@ -143,7 +209,7 @@ export default function Page() {
                 CORPORATE × REGTECH<br />ONE TEAM / ONE SOLUTION<br />EST. MINAMOTO INC.
               </div>
             </div>
-            <h1 className="display reveal d1">企業の次の未来を、<br />アイデアと実行力でつくる。</h1>
+            <Kinetic tag="h1" className="display" lines={["企業の次の未来を、", "アイデアと実行力でつくる。"]} />
             <div className="hero-lower">
               <div>
                 <p className="lead reveal d2">経営、資金、評判、Web、SNS、広告、開発。企業が成長する過程で生まれるさまざまな課題に、ビジネスとテクノロジーの両面から向き合います。課題ごとにサービスを切り分けるのではなく、必要な支援を組み合わせながら、次の一歩へ。</p>
@@ -172,9 +238,9 @@ export default function Page() {
         <section className="philosophy" id="philosophy">
           <div className="container">
             <div className="philo-intro">
-              <div className="section-head reveal">
-                <span className="eyebrow">02 — Philosophy</span>
-                <h2 className="h2">常識の先にある、<br />まだ見えていない可能性へ。</h2>
+              <div className="section-head">
+                <span className="eyebrow reveal">02 — Philosophy</span>
+                <Kinetic className="h2" lines={["常識の先にある、", "まだ見えていない可能性へ。"]} />
               </div>
               <div className="reveal d1">
                 <p className="body">事業環境も、テクノロジーも、マーケティングも、変化し続けています。だからこそ、昨日までの正解をそのまま使うのではなく、新しい技術、新しい発想、新しい方法を取り入れながら、企業の未来に必要な選択肢を考え続ける。</p>
@@ -197,10 +263,10 @@ export default function Page() {
         {/* ============ 03 BUSINESS ============ */}
         <section className="business" id="business">
           <div className="container">
-            <div className="section-head reveal">
-              <span className="eyebrow">03 — Business</span>
-              <h2 className="h2">ひとつの課題だけを、<br />ひとつの方法だけで考えない。</h2>
-              <p className="body">企業の課題は、ひとつの領域だけで完結するとは限りません。資金の問題が事業戦略につながり、ブランドの問題が集客につながり、デジタル施策が企業成長につながることもあります。minamotoでは、大きく「コーポレート部門」と「レグテック部門」の2領域から、企業ごとの課題に合わせたサービスを提供しています。</p>
+            <div className="section-head">
+              <span className="eyebrow reveal">03 — Business</span>
+              <Kinetic className="h2" lines={["ひとつの課題だけを、", "ひとつの方法だけで考えない。"]} />
+              <p className="body reveal d1">企業の課題は、ひとつの領域だけで完結するとは限りません。資金の問題が事業戦略につながり、ブランドの問題が集客につながり、デジタル施策が企業成長につながることもあります。minamotoでは、大きく「コーポレート部門」と「レグテック部門」の2領域から、企業ごとの課題に合わせたサービスを提供しています。</p>
             </div>
             <div className="domains">
               <div className="domain reveal">
@@ -232,10 +298,10 @@ export default function Page() {
         {/* ============ 04 CORPORATE ============ */}
         <section className="corporate" id="corporate">
           <div className="container">
-            <div className="section-head reveal">
-              <span className="eyebrow">04 — Corporate</span>
-              <h2 className="h2">企業を支える土台から、<br />成長を考える。</h2>
-              <p className="body">経営には、資金、集客、評判など複数の課題が同時に発生します。必要な領域を整理しながら、企業の状況に合わせた支援へつなげます。</p>
+            <div className="section-head">
+              <span className="eyebrow reveal">04 — Corporate</span>
+              <Kinetic className="h2" lines={["企業を支える土台から、", "成長を考える。"]} />
+              <p className="body reveal d1">経営には、資金、集客、評判など複数の課題が同時に発生します。必要な領域を整理しながら、企業の状況に合わせた支援へつなげます。</p>
             </div>
             <div className="svc-list">
               {CORPORATE.map(([num, name, desc]) => (
@@ -252,10 +318,10 @@ export default function Page() {
         {/* ============ 05 REGTECH ============ */}
         <section className="regtech" id="regtech">
           <div className="container">
-            <div className="section-head reveal">
-              <span className="eyebrow">05 — RegTech</span>
-              <h2 className="h2">デジタルを、<br />使うことから成果につなげる。</h2>
-              <p className="body">新しいシステムを作る。SNSを運用する。広告を出す。大切なのは、それ自体ではありません。企業が達成したい目的から考え、必要なデジタル施策を選択すること。minamotoでは複数のデジタル領域から企業活動を支援しています。</p>
+            <div className="section-head">
+              <span className="eyebrow reveal">05 — RegTech</span>
+              <Kinetic className="h2" lines={["デジタルを、", "使うことから成果につなげる。"]} />
+              <p className="body reveal d1">新しいシステムを作る。SNSを運用する。広告を出す。大切なのは、それ自体ではありません。企業が達成したい目的から考え、必要なデジタル施策を選択すること。minamotoでは複数のデジタル領域から企業活動を支援しています。</p>
             </div>
             <div className="svc-list">
               {REGTECH.map(([num, name, desc]) => (
@@ -272,10 +338,10 @@ export default function Page() {
         {/* ============ 06 SOLUTIONS ============ */}
         <section className="solutions" id="solutions">
           <div className="container">
-            <div className="section-head center reveal">
-              <span className="eyebrow center">06 — One Team / One Solution</span>
-              <h2 className="h2 narrow">必要なのは、<br />サービスではなく解決策。</h2>
-              <p className="body">企業の課題は、最初から「SNS」「広告」「コンサルティング」と分類されているわけではありません。まずは目的や課題を整理するところから。minamotoが持つ複数の事業領域から、必要な支援につなげます。</p>
+            <div className="section-head center">
+              <span className="eyebrow center reveal">06 — One Team / One Solution</span>
+              <Kinetic className="h2 narrow" lines={["必要なのは、", "サービスではなく解決策。"]} />
+              <p className="body reveal d1">企業の課題は、最初から「SNS」「広告」「コンサルティング」と分類されているわけではありません。まずは目的や課題を整理するところから。minamotoが持つ複数の事業領域から、必要な支援につなげます。</p>
             </div>
             <div className="solutions-grid">
               {SOLUTIONS.map(([n, title, body], i) => (
@@ -294,10 +360,10 @@ export default function Page() {
         {/* ============ 07 IDENTITY ============ */}
         <section className="identity" id="identity">
           <div className="container">
-            <div className="section-head reveal">
-              <span className="eyebrow">07 — Identity</span>
-              <h2 className="h2">すべての仕事に、<br />minamotoらしい理由を。</h2>
-              <p className="body">ブランドは、ロゴや言葉だけで生まれるものではありません。何を大切にするのか。誰と向き合うのか。どんな未来を目指すのか。その思想が一貫して積み重なった先に、企業の個性があります。minamotoでは、企業理念だけでなくブランドマークなどのVisual Identityにも、企業としての考え方を込めています。</p>
+            <div className="section-head">
+              <span className="eyebrow reveal">07 — Identity</span>
+              <Kinetic className="h2" lines={["すべての仕事に、", "minamotoらしい理由を。"]} />
+              <p className="body reveal d1">ブランドは、ロゴや言葉だけで生まれるものではありません。何を大切にするのか。誰と向き合うのか。どんな未来を目指すのか。その思想が一貫して積み重なった先に、企業の個性があります。minamotoでは、企業理念だけでなくブランドマークなどのVisual Identityにも、企業としての考え方を込めています。</p>
             </div>
             <div className="split">
               <div className="link-card reveal">
@@ -323,10 +389,10 @@ export default function Page() {
         {/* ============ 08 COMPANY ============ */}
         <section className="company" id="company">
           <div className="container">
-            <div className="section-head reveal">
-              <span className="eyebrow">08 — Company</span>
-              <h2 className="h2">未来をつくる会社を、<br />もっと知る。</h2>
-              <p className="body">株式会社minamotoは、企業経営を支援するコーポレート領域と、デジタルを活用するレグテック領域を中心に事業を展開しています。会社情報、企業理念、事業内容など、minamotoについて詳しくご覧いただけます。</p>
+            <div className="section-head">
+              <span className="eyebrow reveal">08 — Company</span>
+              <Kinetic className="h2" lines={["未来をつくる会社を、", "もっと知る。"]} />
+              <p className="body reveal d1">株式会社minamotoは、企業経営を支援するコーポレート領域と、デジタルを活用するレグテック領域を中心に事業を展開しています。会社情報、企業理念、事業内容など、minamotoについて詳しくご覧いただけます。</p>
             </div>
             <div className="split split-3">
               <div className="link-card reveal">
@@ -350,11 +416,11 @@ export default function Page() {
           <div className="glow" />
           <div className="container">
             <div className="contact-inner">
-              <div className="reveal">
-                <span className="eyebrow">09 — Contact</span>
-                <h2 className="h2">まだ答えが決まっていなくても、<br />課題からご相談ください。</h2>
-                <p className="body">お問い合わせ内容をもとに、必要なサービスや検討すべき方向性を整理するための入口としてお問い合わせください。</p>
-                <div className="hero-actions">
+              <div>
+                <span className="eyebrow reveal">09 — Contact</span>
+                <Kinetic className="h2" lines={["まだ答えが決まっていなくても、", "課題からご相談ください。"]} />
+                <p className="body reveal d1">お問い合わせ内容をもとに、必要なサービスや検討すべき方向性を整理するための入口としてお問い合わせください。</p>
+                <div className="hero-actions reveal d1">
                   <a href="#" className="btn btn-primary">お問い合わせ・相談をする <span className="arrow">→</span></a>
                   <a href="#business" className="btn btn-ghost">事業一覧から探す <span className="arrow">→</span></a>
                 </div>
@@ -371,10 +437,13 @@ export default function Page() {
         {/* ============ FAQ ============ */}
         <section className="faq" id="faq">
           <div className="container">
-            <div className="section-head reveal"><span className="eyebrow">FAQ</span><h2 className="h2">問い合わせ前の、<br />よくあるご質問。</h2></div>
+            <div className="section-head">
+              <span className="eyebrow reveal">FAQ</span>
+              <Kinetic className="h2" lines={["問い合わせ前の、", "よくあるご質問。"]} />
+            </div>
             <div className="faq-list">
-              {FAQ.map(([q, question, answer], i) => (
-                <FaqItem key={q} q={q} question={question} answer={answer} cls={`reveal${i ? " " : ""}`} />
+              {FAQ.map(([q, question, answer]) => (
+                <FaqItem key={q} q={q} question={question} answer={answer} />
               ))}
             </div>
           </div>
@@ -385,7 +454,7 @@ export default function Page() {
           <div className="glow" />
           <div className="container">
             <span className="eyebrow center reveal">To the Next Future</span>
-            <h2 className="display reveal d1">次の一歩を、<br />ここから。</h2>
+            <Kinetic tag="h2" className="display" lines={["次の一歩を、", "ここから。"]} />
             <p className="body reveal d2">経営のこと。資金のこと。企業の評判のこと。WebやSNS、広告、開発のこと。課題の名前がまだはっきりしていなくても構いません。まずは、現在の状況と実現したい未来をお聞かせください。</p>
             <div className="reveal d2"><a href="#" className="btn btn-primary">お問い合わせ・相談をする <span className="arrow">→</span></a></div>
           </div>
